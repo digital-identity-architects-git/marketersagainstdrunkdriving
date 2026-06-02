@@ -125,7 +125,33 @@ footer{background:var(--navy-deep);color:#9fb4e0;text-align:center;padding:30px 
 footer a{color:#cdd9f2}
 .backlink{display:inline-block;font-family:var(--display);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--red);text-decoration:none;margin-bottom:24px}
 .backlink:hover{text-decoration:underline}
-@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}}
+/* hero button + pulse */
+.btn-hero{display:inline-block;font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;background:var(--red);color:#fff;text-decoration:none;padding:13px 24px;border-radius:6px;transition:.18s}
+.btn-hero:hover{background:#fff;color:var(--navy)}
+.pulse{width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 0 0 rgba(255,255,255,.7);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.6)}70%{box-shadow:0 0 0 9px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+
+/* about story */
+.story{max-width:720px}
+.story .lead-para{font-size:22px;line-height:1.6;color:var(--navy);font-weight:500;margin-bottom:30px}
+.story h2{font-family:var(--display);font-weight:700;font-size:25px;color:var(--navy);margin:34px 0 12px;padding-left:14px;border-left:4px solid var(--red)}
+.story p{margin-bottom:16px;color:var(--ink-soft)}
+.signoff{margin-top:40px;padding-top:22px;border-top:2px solid var(--line)}
+.signoff p{font-family:var(--display);font-weight:600;font-size:20px;color:var(--navy);margin:0}
+.signoff .signoff-role{font-family:var(--display);font-weight:400;font-size:13px;letter-spacing:.04em;color:var(--ink-mute);text-transform:uppercase;margin-top:4px}
+
+/* follow / 20 sites */
+.site-list{display:flex;flex-direction:column;gap:14px;margin-bottom:20px}
+.site-row{display:flex;gap:18px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:10px;padding:20px 22px;transition:.16s}
+.site-row:hover{border-left-color:var(--red);box-shadow:0 6px 18px rgba(10,42,102,.1)}
+.site-rank{font-family:var(--display);font-weight:700;font-size:26px;color:var(--red);min-width:44px;line-height:1.1}
+.site-main{flex:1}
+.site-name{font-family:var(--display);font-weight:600;font-size:20px;color:var(--navy);text-decoration:none}
+.site-name:hover{color:var(--red)}
+.site-desc{margin:6px 0 10px;color:var(--ink-soft);font-size:16px}
+.site-tag{display:inline-block;font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:#e3edff;color:var(--navy);padding:3px 11px;border-radius:11px}
+
+@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}}
 </style></head>
 <body>
 <div class="brand-bar"><div class="brand-inner">
@@ -135,8 +161,10 @@ footer a{color:#cdd9f2}
   </a>
   <nav class="brand-nav">
     <a href="../index.html">Home</a>
+    <a href="../about.html">About</a>
     <a href="../index.html#guides" class="current">Guides</a>
     <a href="../index.html#articles">Articles</a>
+    <a href="../best-drunk-driving-sites-to-follow.html">Follow</a>
   </nav>
 </div></div>
 
