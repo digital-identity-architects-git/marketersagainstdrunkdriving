@@ -151,7 +151,23 @@ footer a{color:#cdd9f2}
 .site-desc{margin:6px 0 10px;color:var(--ink-soft);font-size:16px}
 .site-tag{display:inline-block;font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:#e3edff;color:var(--navy);padding:3px 11px;border-radius:11px}
 
-@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}}
+/* share box (sharable snippets, no duplicate content) */
+.share-box{margin-top:46px;background:linear-gradient(135deg,#0a2a66 0%,#06184a 100%);border-radius:14px;padding:30px;color:#fff;border-top:6px solid var(--red)}
+.share-box-head h3{font-family:var(--display);font-weight:700;font-size:24px;color:#fff;margin-bottom:8px}
+.share-box-head p{font-size:14px;color:#aebfe2;max-width:620px;margin-bottom:22px}
+.snippet-list{display:flex;flex-direction:column;gap:14px}
+.snippet{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:18px}
+.snippet-text{font-size:15px;line-height:1.55;color:#eef3ff;margin-bottom:14px}
+.snippet-actions{display:flex;flex-wrap:wrap;gap:8px}
+.snip-btn{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;padding:9px 15px;border-radius:6px;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.snip-btn.copy{background:#fff;color:var(--navy)}
+.snip-btn.copy:hover{background:var(--red);color:#fff}
+.snip-btn.x{background:#000;color:#fff}
+.snip-btn.fb{background:#1877f2;color:#fff}
+.snip-btn.li{background:#0a66c2;color:#fff}
+.snip-btn.x:hover,.snip-btn.fb:hover,.snip-btn.li:hover{opacity:.85}
+
+@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}}
 </style></head>
 <body>
 <div class="brand-bar"><div class="brand-inner">
