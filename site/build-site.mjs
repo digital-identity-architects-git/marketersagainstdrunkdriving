@@ -150,29 +150,57 @@ footer{background:var(--navy-deep);color:#9fb4e0;text-align:center;padding:30px 
 footer a{color:#cdd9f2}
 .backlink{display:inline-block;font-family:var(--display);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--red);text-decoration:none;margin-bottom:24px}
 .backlink:hover{text-decoration:underline}
-@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}}
+/* hero button + pulse */
+.btn-hero{display:inline-block;font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;background:var(--red);color:#fff;text-decoration:none;padding:13px 24px;border-radius:6px;transition:.18s}
+.btn-hero:hover{background:#fff;color:var(--navy)}
+.pulse{width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 0 0 rgba(255,255,255,.7);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.6)}70%{box-shadow:0 0 0 9px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+
+/* about story */
+.story{max-width:720px}
+.story .lead-para{font-size:22px;line-height:1.6;color:var(--navy);font-weight:500;margin-bottom:30px}
+.story h2{font-family:var(--display);font-weight:700;font-size:25px;color:var(--navy);margin:34px 0 12px;padding-left:14px;border-left:4px solid var(--red)}
+.story p{margin-bottom:16px;color:var(--ink-soft)}
+.signoff{margin-top:40px;padding-top:22px;border-top:2px solid var(--line)}
+.signoff p{font-family:var(--display);font-weight:600;font-size:20px;color:var(--navy);margin:0}
+.signoff .signoff-role{font-family:var(--display);font-weight:400;font-size:13px;letter-spacing:.04em;color:var(--ink-mute);text-transform:uppercase;margin-top:4px}
+
+/* follow / 20 sites */
+.site-list{display:flex;flex-direction:column;gap:14px;margin-bottom:20px}
+.site-row{display:flex;gap:18px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:10px;padding:20px 22px;transition:.16s}
+.site-row:hover{border-left-color:var(--red);box-shadow:0 6px 18px rgba(10,42,102,.1)}
+.site-rank{font-family:var(--display);font-weight:700;font-size:26px;color:var(--red);min-width:44px;line-height:1.1}
+.site-main{flex:1}
+.site-name{font-family:var(--display);font-weight:600;font-size:20px;color:var(--navy);text-decoration:none}
+.site-name:hover{color:var(--red)}
+.site-desc{margin:6px 0 10px;color:var(--ink-soft);font-size:16px}
+.site-tag{display:inline-block;font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:#e3edff;color:var(--navy);padding:3px 11px;border-radius:11px}
+
+@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}}
 `;
 
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-function brandBar(current) {
+function brandBar(current, prefix = '') {
   const link = (href, label, key) =>
-    `<a href="${href}"${current === key ? ' class="current"' : ''}>${label}</a>`;
+    `<a href="${prefix}${href}"${current === key ? ' class="current"' : ''}>${label}</a>`;
   return `<div class="brand-bar"><div class="brand-inner">
-  <a class="brand-mark" href="../index.html">
+  <a class="brand-mark" href="${prefix}index.html">
     <span class="shield"><span>MADD</span></span>
     <span><span class="brand-name">MADD</span><br><span class="brand-sub">Marketers Against Drunk Driving</span></span>
   </a>
   <nav class="brand-nav">
-    ${link('../index.html', 'Home', 'home')}
-    ${link('../index.html#guides', 'Guides', 'guides')}
-    ${link('../index.html#articles', 'Articles', 'articles')}
+    ${link('index.html', 'Home', 'home')}
+    ${link('about.html', 'About', 'about')}
+    ${link('index.html#guides', 'Guides', 'guides')}
+    ${link('index.html#articles', 'Articles', 'articles')}
+    ${link('best-drunk-driving-sites-to-follow.html', 'Follow', 'follow')}
   </nav>
 </div></div>`;
 }
 
-function page({ title, description, schema, body, current }) {
+function page({ title, description, schema, body, current, prefix = '' }) {
   return `<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(title)}</title>
@@ -181,7 +209,7 @@ ${FONTS}
 ${schema ? `<script type="application/ld+json">${JSON.stringify(schema)}</script>` : ''}
 <style>${CSS}</style></head>
 <body>
-${brandBar(current)}
+${brandBar(current, prefix)}
 ${body}
 <footer>© ${new Date().getFullYear()} Marketers Against Drunk Driving · Using marketing for good · <span style="color:#c8102e;font-weight:600">${CAMPAIGN}</span><br>Educational content only — not legal advice.</footer>
 </body></html>`;
@@ -292,6 +320,7 @@ function renderGuide(g) {
     schema,
     body,
     current: 'guides',
+    prefix: '../',
   });
 }
 
@@ -324,12 +353,13 @@ function renderArticle(a) {
   <div class="article-body">${a.html}</div>
   <div class="hashtags">${chips}</div>
 </main>`;
-  return page({ title: a.metaTitle, description: a.metaDescription, schema, body, current: 'articles' });
+  return page({ title: a.metaTitle, description: a.metaDescription, schema, body, current: 'articles', prefix: '../' });
 }
 
-/* ---------------------------- HUB ---------------------------- */
-function renderHub() {
+/* ---------------------------- HOME ---------------------------- */
+function renderHome() {
   const guideCards = guides
+    .slice(0, 3)
     .map(
       (g) => `<a class="card" href="guides/${g.slug}.html">
     <div class="kicker">Interactive Guide</div>
@@ -353,27 +383,47 @@ function renderHub() {
 
   const body = `
 <header class="hero"><div class="hero-inner">
-  <div class="eyebrow"><span></span>USING MARKETING FOR GOOD</div>
+  <div class="eyebrow"><span class="pulse"></span>USING MARKETING FOR GOOD</div>
   <h1>Marketers Against <em>Drunk Driving</em></h1>
-  <div class="subtitle">Helpful, no-nonsense guides and articles on drunk driving law, your rights, and finding the right help — for everyone, before anyone gets hurt.</div>
-  <p class="hero-tag">We meet people where they are. Whether you're trying to understand the law, choose an attorney, or simply get home safe tonight, we're here to help. The safest road is always a planned, sober ride. <span style="color:#fff;font-weight:600">${CAMPAIGN}</span></p>
+  <div class="subtitle">A brand built by a marketer who decided to point real reach at a problem that takes someone every 39 minutes.</div>
+  <p class="hero-tag">We meet people where they are — whether they're trying to understand the law, choose an attorney, or simply get home safe tonight. The mission is simple: get the right message in front of the right people, and get everyone home. <span style="color:#fff;font-weight:600">${CAMPAIGN}</span></p>
   <div class="meta-row">
     <div class="meta-card"><div class="label">Guides</div><div class="value">${guides.length} Interactive</div></div>
     <div class="meta-card"><div class="label">Articles</div><div class="value">${seoArticles.length} Published</div></div>
     <div class="meta-card"><div class="label">Mission</div><div class="value">Zero drunk driving</div></div>
   </div>
+  <div style="margin-top:30px"><a class="btn-hero" href="about.html">Read how this started →</a></div>
 </div></header>
 <main class="wrap" style="max-width:1100px">
+
+  <div class="hub-section">
+    <h2>Why this exists</h2>
+    <p class="lede">I'm an SEO and brand builder. I know how to make a message travel. After a wrong turn of my own, I decided the most responsible thing I could do with that skill was aim it at drunk driving — prevention, education, and getting people the help they need before anyone gets hurt. <a href="about.html">Here's the full story →</a></p>
+  </div>
+
   <div class="hub-section" id="guides">
-    <h2>Interactive Guides</h2>
+    <h2>Start Here: Interactive Guides</h2>
     <p class="lede">Work through these like mini-courses. Tick off each action item as you go — your progress saves automatically.</p>
     <div class="card-grid">${guideCards}</div>
   </div>
+
   <div class="hub-section" id="articles">
     <h2>Articles</h2>
     <p class="lede">Clear, factual answers to the questions people actually search — felony thresholds, state-by-state rules, and more.</p>
     <div class="card-grid">${articleCards}</div>
   </div>
+
+  <div class="hub-section" id="follow">
+    <h2>Want to help out?</h2>
+    <p class="lede">The fastest way to start is to follow the people already doing the work. We rounded up the 20 best drunk-driving and road-safety sites to follow.</p>
+    <a class="card" href="best-drunk-driving-sites-to-follow.html" style="max-width:420px">
+      <div class="kicker">Resource</div>
+      <h3>The 20 Best Drunk Driving Sites to Follow</h3>
+      <p>Reputable organizations, advocates, and data sources to follow, share, and learn from.</p>
+      <div class="meta">20 sites · Updated ${new Date().getFullYear()}</div>
+    </a>
+  </div>
+
   <div class="cta-band">
     <h2>Care for everyone. Get everyone home.</h2>
     <p>Our brand voice stays helpful as long as people are trying to do right. Plan the ride, hand over the keys, and share the message.</p>
@@ -381,17 +431,163 @@ function renderHub() {
   </div>
 </main>`;
 
-  // Hub lives at site root, so its brand-bar links shouldn't use ../
   return page({
-    title: 'Marketers Against Drunk Driving — Guides & Articles',
+    title: 'Marketers Against Drunk Driving — Using Marketing for Good',
     description:
-      'Helpful guides and articles on drunk driving law, felony DUI, choosing an attorney, and staying safe. Using marketing for good. #marketersagainstdrunkdriving',
+      'Marketers Against Drunk Driving: helpful guides, articles, and resources on drunk driving law, prevention, and getting home safe. Built by an SEO turning reach into responsibility. #marketersagainstdrunkdriving',
     body,
     current: 'home',
-  })
-    .replace(/href="\.\.\/index\.html/g, 'href="index.html')
-    .replace(/href="guides\//g, 'href="guides/')
-    .replace(/class="brand-mark" href="index\.html"/, 'class="brand-mark" href="index.html"');
+    prefix: '',
+  });
+}
+
+/* ---------------------------- ABOUT ---------------------------- */
+function renderAbout() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'About Marketers Against Drunk Driving',
+    description:
+      'The story behind Marketers Against Drunk Driving — how a trip to pay a ticket turned into a recruit, and why an SEO decided brand-building was a form of social responsibility.',
+    inLanguage: 'en',
+  };
+
+  const body = `
+<header class="hero"><div class="hero-inner">
+  <div class="eyebrow"><span class="pulse"></span>OUR STORY</div>
+  <h1>I went to pay a ticket. I left a <em>recruit.</em></h1>
+  <div class="subtitle">How a marketer ended up building a brand against drunk driving — and why I think that's exactly what my skills are for.</div>
+</div></header>
+<main class="wrap">
+  <a class="backlink" href="index.html">← Back home</a>
+
+  <div class="story">
+    <p class="lead-para">I build brands for a living. As an SEO, my whole job is getting the right message in front of the right people at the exact moment they're looking — and making it stick. For years I pointed that skill wherever the work was. Then one ordinary errand changed what I pointed it at.</p>
+
+    <h2>The errand</h2>
+    <p>I went in to pay a ticket. Nothing dramatic — paperwork, a line, the kind of thing you forget by dinner. But while I was there, I got talking to people whose lives had been rearranged by a drunk driver. Not statistics. People. A name, a date, an empty chair. By the time I walked out, I wasn't a guy who'd paid a ticket. I was a recruit.</p>
+
+    <h2>The realization</h2>
+    <p>Here's what hit me on the drive home: the thing that takes someone in this country roughly every 39 minutes is <em>100% preventable</em>, and the gap isn't information — it's <strong>attention</strong>. The right message, in front of the right person, at the right moment. That is <em>literally my job.</em> I spend my days winning attention for brands. I had the exact skill the problem was starving for, and I'd never once aimed it here.</p>
+
+    <h2>Why a marketer?</h2>
+    <p>Awareness campaigns don't fail because the message is wrong. "Don't drive drunk" is not a controversial idea. They fail because they can't <em>travel</em> — they don't rank, they don't get shared, they don't show up where people already are. Building things that travel is the entire discipline of SEO and brand. So Marketers Against Drunk Driving is what happens when you treat a public-safety message like a brand that deserves to win: real content, real search visibility, real reach.</p>
+
+    <h2>What we stand for</h2>
+    <p>We're helpful first, and we mean it. If you're trying to understand the law, choose an attorney, support someone, or just get home safe tonight — we're on your side, no judgment. We care about everyone as a person, including people who've made mistakes. That's how you build a brand people actually trust, and trust is what makes a message spread.</p>
+
+    <h2>This is social responsibility</h2>
+    <p>I think anyone with the ability to move people owes it to the world to occasionally move them somewhere good. I can build brands that get in front of all the right people. So this one is mine to build — and it's the one I'm proudest of. If it gets even one person to hand over the keys, the whole thing was worth it.</p>
+
+    <div class="signoff">
+      <p>— Eric Brister</p>
+      <p class="signoff-role">SEO &amp; Brand Builder · Founder, Marketers Against Drunk Driving</p>
+    </div>
+  </div>
+
+  <div class="cta-band">
+    <h2>You don't have to be a marketer to help.</h2>
+    <p>Follow the people doing the work, share what's useful, and plan the ride. That's the whole job.</p>
+    <span class="tag">${CAMPAIGN}</span>
+    <div style="margin-top:18px"><a class="btn-hero" href="best-drunk-driving-sites-to-follow.html">See the 20 sites to follow →</a></div>
+  </div>
+</main>`;
+
+  return page({
+    title: 'About — Marketers Against Drunk Driving',
+    description:
+      'The story behind Marketers Against Drunk Driving: how paying a ticket turned a marketer into a recruit, and why building this brand is social responsibility. #marketersagainstdrunkdriving',
+    schema,
+    body,
+    current: 'about',
+    prefix: '',
+  });
+}
+
+/* ---------------------------- FOLLOW (20 sites) ---------------------------- */
+const bestSites = [
+  ['MADD — Mothers Against Drunk Driving', 'https://www.madd.org', 'The original and largest victim-services and advocacy organization fighting drunk and drugged driving.', 'Advocacy & Victim Support'],
+  ['NHTSA', 'https://www.nhtsa.gov/risky-driving/drunk-driving', 'The federal agency setting U.S. road-safety policy and running national impaired-driving campaigns.', 'Government / Data'],
+  ['Responsibility.org', 'https://www.responsibility.org', 'Foundation for Advancing Alcohol Responsibility — research and programs to eliminate drunk driving and underage drinking.', 'Research & Programs'],
+  ['SADD', 'https://www.sadd.org', 'Students Against Destructive Decisions — peer-to-peer prevention built for teens and young adults.', 'Youth Prevention'],
+  ['We Save Lives', 'https://wesavelives.org', 'Founded by MADD founder Candace Lightner, focused on the "3 D\'s" — drunk, drugged, and distracted driving.', 'Advocacy'],
+  ['IIHS', 'https://www.iihs.org', 'Insurance Institute for Highway Safety — independent crash research and hard data on what actually saves lives.', 'Research & Data'],
+  ['GHSA', 'https://www.ghsa.org', 'Governors Highway Safety Association — the voice of state highway safety offices and their programs.', 'Policy / State'],
+  ['National Safety Council', 'https://www.nsc.org', 'Century-old nonprofit working to eliminate preventable deaths, including impaired-driving fatalities.', 'Safety Education'],
+  ['NTSB', 'https://www.ntsb.gov', 'National Transportation Safety Board — investigates crashes and issues the recommendations that change the law.', 'Government / Investigations'],
+  ['CDC — Impaired Driving', 'https://www.cdc.gov/transportation-safety/impaired-driving/', 'The CDC\'s public-health view of impaired driving: data, risk factors, and what works to prevent it.', 'Public Health'],
+  ['AAA Foundation for Traffic Safety', 'https://aaafoundation.org', 'Independent research arm dedicated to saving lives through traffic-safety research and education.', 'Research'],
+  ['RADD', 'https://www.radd.org', 'The entertainment industry\'s road-safety nonprofit, using celebrity reach to promote safe, sober driving.', 'Awareness / Media'],
+  ['Vision Zero Network', 'https://visionzeronetwork.org', 'The movement to eliminate all traffic fatalities and severe injuries through smarter street design and policy.', 'Movement / Policy'],
+  ['Advocates for Highway & Auto Safety', 'https://saferoads.org', 'A coalition of consumer, safety, and insurance groups pushing for stronger federal safety laws.', 'Advocacy / Policy'],
+  ['FARS / NHTSA Data', 'https://www-fars.nhtsa.dot.gov', 'The Fatality Analysis Reporting System — the authoritative U.S. database of fatal crash data.', 'Data Source'],
+  ['NOYS', 'https://noys.org', 'National Organizations for Youth Safety — a coalition amplifying youth-led safety and prevention efforts.', 'Youth Coalition'],
+  ['Brake (Road Safety Charity)', 'https://www.brake.org.uk', 'A leading international road-safety charity supporting victims and campaigning for safer roads.', 'International / Victim Support'],
+  ['WHO — Road Safety', 'https://www.who.int/health-topics/road-safety', 'The World Health Organization\'s global view on road-traffic injury, including alcohol-impaired driving.', 'Global Health'],
+  ['End DUI', 'https://www.enddui.com', 'Education and resources aimed at preventing DUIs and helping people understand the real consequences.', 'Education'],
+  ['Your State Highway Safety Office', 'https://www.ghsa.org/about/shsos', 'Every state has one. Follow yours for local laws, checkpoints, grants, and campaigns where you actually drive.', 'Local / State'],
+];
+
+function renderFollow() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'The 20 Best Drunk Driving Sites to Follow',
+    numberOfItems: bestSites.length,
+    itemListElement: bestSites.map(([name, url], i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      url,
+      name,
+    })),
+  };
+
+  const rows = bestSites
+    .map(
+      ([name, url, desc, tag], i) => `<div class="site-row">
+    <div class="site-rank">${String(i + 1).padStart(2, '0')}</div>
+    <div class="site-main">
+      <a class="site-name" href="${url}" target="_blank" rel="noopener nofollow">${esc(name)} ↗</a>
+      <p class="site-desc">${esc(desc)}</p>
+      <span class="site-tag">${esc(tag)}</span>
+    </div>
+  </div>`
+    )
+    .join('\n');
+
+  const body = `
+<header class="hero"><div class="hero-inner">
+  <div class="eyebrow"><span class="pulse"></span>RESOURCE · START HELPING</div>
+  <h1>The 20 Best Drunk Driving <em>Sites to Follow</em></h1>
+  <div class="subtitle">Want to help out but not sure where to start? Follow the people already doing the work. Here are 20 reputable organizations, advocates, and data sources worth your attention.</div>
+  <div class="meta-row">
+    <div class="meta-card"><div class="label">Sites</div><div class="value">${bestSites.length} Vetted</div></div>
+    <div class="meta-card"><div class="label">Best for</div><div class="value" style="font-size:14px">Following · Sharing · Learning</div></div>
+    <div class="meta-card"><div class="label">Updated</div><div class="value">${new Date().getFullYear()}</div></div>
+  </div>
+</div></header>
+<main class="wrap">
+  <a class="backlink" href="index.html">← Back home</a>
+  <p class="section-lede">Following these accounts does three things: it keeps you informed, it puts good information into your own feed where friends can see it, and every share helps these messages travel further. That last part is the whole point. Open the ones that resonate, hit follow, and share what's useful.</p>
+
+  <div class="site-list">${rows}</div>
+
+  <div class="cta-band">
+    <h2>Following is step one. Sharing is step two.</h2>
+    <p>Pick two of these, follow them today, and reshare the next thing they post. You just became part of the reach.</p>
+    <span class="tag">${CAMPAIGN}</span>
+  </div>
+</main>`;
+
+  return page({
+    title: 'The 20 Best Drunk Driving Sites to Follow (2026) — MADD',
+    description:
+      'The 20 best drunk driving and road-safety sites to follow — MADD, NHTSA, IIHS, SADD, Responsibility.org and more. Reputable orgs, advocates, and data sources to follow and share.',
+    schema,
+    body,
+    current: 'follow',
+    prefix: '',
+  });
 }
 
 /* ---------------------------- WRITE ---------------------------- */
@@ -404,10 +600,11 @@ for (const g of guides) {
 for (const a of seoArticles) {
   writeFileSync(join(__dirname, 'articles', `${a.slug}.html`), renderArticle(a));
 }
-writeFileSync(join(__dirname, 'index.html'), renderHub());
+writeFileSync(join(__dirname, 'index.html'), renderHome());
+writeFileSync(join(__dirname, 'about.html'), renderAbout());
+writeFileSync(join(__dirname, 'best-drunk-driving-sites-to-follow.html'), renderFollow());
 
+const total = guides.length + seoArticles.length + 3;
 console.log(
-  `✓ Built site: 1 hub + ${guides.length} guides + ${seoArticles.length} articles = ${
-    guides.length + seoArticles.length + 1
-  } pages`
+  `✓ Built site: home + about + follow + ${guides.length} guides + ${seoArticles.length} articles = ${total} pages`
 );
