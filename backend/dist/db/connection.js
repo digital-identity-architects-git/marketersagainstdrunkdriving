@@ -60,6 +60,18 @@ export async function initDatabase() {
       );
     `);
         await client.query(`
+      CREATE TABLE IF NOT EXISTS daily_social_posts (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        platform VARCHAR(50),
+        description TEXT,
+        hashtags TEXT[] DEFAULT ARRAY[]::TEXT[],
+        text TEXT,
+        generated_at TIMESTAMP DEFAULT NOW(),
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+        await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_daily_social_generated ON daily_social_posts(generated_at);
       CREATE INDEX IF NOT EXISTS idx_incidents_state ON incidents(state);
       CREATE INDEX IF NOT EXISTS idx_incidents_date ON incidents(date_occurred);
       CREATE INDEX IF NOT EXISTS idx_incidents_severity ON incidents(severity);

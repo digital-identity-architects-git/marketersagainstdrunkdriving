@@ -4,8 +4,85 @@ import { pool } from '../db/connection.js';
 import { getTopIncidentsToday } from '../services/newsService.js';
 import { generateDailyBlog } from '../services/blogService.js';
 import { DunkDrivingIncident } from '../types/index.js';
+import { seoArticles, getArticleBySlug } from '../content/seoArticles.js';
+import { guides, getGuideBySlug } from '../content/guides.js';
+import { generateAndStoreDailyPosts, getLatestDailyPosts } from '../services/dailySocialService.js';
+import { generateDailySocialPosts } from '../services/spintaxService.js';
 
 const router = express.Router();
+
+// GET /api/articles - SEO blog articles (static content, list view)
+router.get('/articles', (req: Request, res: Response) => {
+  res.json(
+    seoArticles.map(({ slug, title, targetKeyword, intent, metaDescription, datePublished }) => ({
+      slug,
+      title,
+      targetKeyword,
+      intent,
+      metaDescription,
+      datePublished,
+    }))
+  );
+});
+
+// GET /api/articles/:slug - Full SEO article by slug
+router.get('/articles/:slug', (req: Request, res: Response) => {
+  const article = getArticleBySlug(req.params.slug);
+  if (!article) {
+    return res.status(404).json({ error: 'Article not found' });
+  }
+  res.json(article);
+});
+
+// GET /api/guides - Interactive guides (list view)
+router.get('/guides', (req: Request, res: Response) => {
+  res.json(
+    guides.map(({ slug, title, targetKeyword, intent, metaDescription, datePublished, steps }) => ({
+      slug,
+      title,
+      targetKeyword,
+      intent,
+      metaDescription,
+      datePublished,
+      stepCount: steps.length,
+    }))
+  );
+});
+
+// GET /api/guides/:slug - Full interactive guide by slug
+router.get('/guides/:slug', (req: Request, res: Response) => {
+  const guide = getGuideBySlug(req.params.slug);
+  if (!guide) {
+    return res.status(404).json({ error: 'Guide not found' });
+  }
+  res.json(guide);
+});
+
+// GET /api/social/daily - Latest spintax-generated daily social posts.
+// Falls back to an on-the-fly batch if the database is unavailable.
+router.get('/social/daily', async (req: Request, res: Response) => {
+  try {
+    const posts = await getLatestDailyPosts(5);
+    if (posts.length > 0) {
+      return res.json(posts);
+    }
+    res.json(generateDailySocialPosts());
+  } catch (error) {
+    console.warn('Daily posts DB unavailable, serving fresh spintax batch');
+    res.json(generateDailySocialPosts());
+  }
+});
+
+// POST /api/social/daily/generate - Force a fresh daily batch now
+router.post('/social/daily/generate', async (req: Request, res: Response) => {
+  try {
+    const posts = await generateAndStoreDailyPosts();
+    res.json({ message: 'Daily social posts generated', count: posts.length, posts });
+  } catch (error) {
+    console.error('Error generating daily posts:', error);
+    res.status(500).json({ error: 'Daily post generation failed' });
+  }
+});
 
 // GET /api/incidents - Get all incidents
 router.get('/incidents', async (req: Request, res: Response) => {
