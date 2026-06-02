@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 import cors from 'cors';
 import { initDatabase } from './db/connection.js';
 import apiRoutes from './routes/api.js';
+import { startDailySocialScheduler } from './listeners/dailySocialScheduler.js';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -19,7 +20,10 @@ async function start() {
     console.log('🚀 Starting Marketers Against Drunk Driving API...');
     
     await initDatabase();
-    
+
+    // Once-daily spintax social post generation (no external APIs).
+    startDailySocialScheduler();
+
     app.listen(PORT, () => {
       console.log(`✓ Server running on http://localhost:${PORT}`);
       console.log(`✓ API available at http://localhost:${PORT}/api`);

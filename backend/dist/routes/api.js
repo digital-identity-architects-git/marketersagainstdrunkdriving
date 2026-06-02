@@ -2,7 +2,69 @@ import express from 'express';
 import { pool } from '../db/connection.js';
 import { getTopIncidentsToday } from '../services/newsService.js';
 import { generateDailyBlog } from '../services/blogService.js';
+import { seoArticles, getArticleBySlug } from '../content/seoArticles.js';
+import { guides, getGuideBySlug } from '../content/guides.js';
+import { generateAndStoreDailyPosts, getLatestDailyPosts } from '../services/dailySocialService.js';
+import { generateDailySocialPosts } from '../services/spintaxService.js';
 const router = express.Router();
+router.get('/articles', (req, res) => {
+    res.json(seoArticles.map(({ slug, title, targetKeyword, intent, metaDescription, datePublished }) => ({
+        slug,
+        title,
+        targetKeyword,
+        intent,
+        metaDescription,
+        datePublished,
+    })));
+});
+router.get('/articles/:slug', (req, res) => {
+    const article = getArticleBySlug(req.params.slug);
+    if (!article) {
+        return res.status(404).json({ error: 'Article not found' });
+    }
+    res.json(article);
+});
+router.get('/guides', (req, res) => {
+    res.json(guides.map(({ slug, title, targetKeyword, intent, metaDescription, datePublished, steps }) => ({
+        slug,
+        title,
+        targetKeyword,
+        intent,
+        metaDescription,
+        datePublished,
+        stepCount: steps.length,
+    })));
+});
+router.get('/guides/:slug', (req, res) => {
+    const guide = getGuideBySlug(req.params.slug);
+    if (!guide) {
+        return res.status(404).json({ error: 'Guide not found' });
+    }
+    res.json(guide);
+});
+router.get('/social/daily', async (req, res) => {
+    try {
+        const posts = await getLatestDailyPosts(5);
+        if (posts.length > 0) {
+            return res.json(posts);
+        }
+        res.json(generateDailySocialPosts());
+    }
+    catch (error) {
+        console.warn('Daily posts DB unavailable, serving fresh spintax batch');
+        res.json(generateDailySocialPosts());
+    }
+});
+router.post('/social/daily/generate', async (req, res) => {
+    try {
+        const posts = await generateAndStoreDailyPosts();
+        res.json({ message: 'Daily social posts generated', count: posts.length, posts });
+    }
+    catch (error) {
+        console.error('Error generating daily posts:', error);
+        res.status(500).json({ error: 'Daily post generation failed' });
+    }
+});
 router.get('/incidents', async (req, res) => {
     try {
         const state = req.query.state;
