@@ -727,8 +727,27 @@ Sitemap: ${BASE_URL}/sitemap.xml
 `;
 writeFileSync(join(__dirname, 'robots.txt'), robots);
 
+/* llms.txt — helps AI assistants understand and cite the site (llmstxt.org) */
+const llms = `# Marketers Against Drunk Driving
+
+> Using marketing for good. Helpful, plain-English guides, articles, and resources on drunk driving law (DUI/DWI), felony thresholds, choosing an attorney, prevention, and getting home safe. Built by an SEO who turned brand-building into social responsibility. Educational content only — not legal advice. Campaign hashtag: #marketersagainstdrunkdriving
+
+## About
+- [About — our story](${BASE_URL}/about.html): How paying a ticket turned a marketer into a recruit, and why building this brand is social responsibility.
+
+## Articles
+${seoArticles.map((a) => `- [${a.title}](${BASE_URL}/articles/${a.slug}.html): ${a.metaDescription}`).join('\n')}
+
+## Guides
+${guides.map((g) => `- [${g.title}](${BASE_URL}/guides/${g.slug}.html): ${g.metaDescription}`).join('\n')}
+
+## Resources
+- [The 20 Best Drunk Driving Sites to Follow](${BASE_URL}/best-drunk-driving-sites-to-follow.html): A vetted list of reputable organizations, advocates, and data sources on drunk driving and road safety.
+`;
+writeFileSync(join(__dirname, 'llms.txt'), llms);
+
 const total = guides.length + seoArticles.length + 3;
 console.log(
   `✓ Built site: home + about + follow + ${guides.length} guides + ${seoArticles.length} articles = ${total} pages`
 );
-console.log(`✓ Wrote sitemap.xml (${urls.length} URLs) + robots.txt`);
+console.log(`✓ Wrote sitemap.xml (${urls.length} URLs) + robots.txt + llms.txt`);
