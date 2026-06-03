@@ -12,6 +12,7 @@
     "dev": "npm run dev --prefix backend",
     "dev:frontend": "npm run dev --prefix frontend",
     "build": "npm run build --prefix frontend && npm run build --prefix backend",
+    "build:pages": "node site/build-site.mjs",
     "start": "npm start --prefix backend"
   },
   "keywords": [
