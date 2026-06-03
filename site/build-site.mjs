@@ -688,7 +688,47 @@ writeFileSync(join(__dirname, 'index.html'), renderHome());
 writeFileSync(join(__dirname, 'about.html'), renderAbout());
 writeFileSync(join(__dirname, 'best-drunk-driving-sites-to-follow.html'), renderFollow());
 
+/* ---------------------------- SITEMAP + ROBOTS ---------------------------- */
+const BASE_URL = 'https://marketersagainstdrunkdriving.com';
+const today = new Date().toISOString().slice(0, 10);
+
+const urls = [
+  { loc: '', priority: '1.0', lastmod: today },
+  { loc: 'about.html', priority: '0.7', lastmod: today },
+  { loc: 'best-drunk-driving-sites-to-follow.html', priority: '0.8', lastmod: today },
+  ...guides.map((g) => ({ loc: `guides/${g.slug}.html`, priority: '0.8', lastmod: today })),
+  ...seoArticles.map((a) => ({
+    loc: `articles/${a.slug}.html`,
+    priority: '0.9',
+    lastmod: a.datePublished || today,
+  })),
+];
+
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map(
+    (u) => `  <url>
+    <loc>${BASE_URL}/${u.loc}</loc>
+    <lastmod>${u.lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>${u.priority}</priority>
+  </url>`
+  )
+  .join('\n')}
+</urlset>
+`;
+writeFileSync(join(__dirname, 'sitemap.xml'), sitemap);
+
+const robots = `User-agent: *
+Allow: /
+
+Sitemap: ${BASE_URL}/sitemap.xml
+`;
+writeFileSync(join(__dirname, 'robots.txt'), robots);
+
 const total = guides.length + seoArticles.length + 3;
 console.log(
   `✓ Built site: home + about + follow + ${guides.length} guides + ${seoArticles.length} articles = ${total} pages`
 );
+console.log(`✓ Wrote sitemap.xml (${urls.length} URLs) + robots.txt`);
