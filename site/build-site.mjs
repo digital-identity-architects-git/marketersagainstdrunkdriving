@@ -176,11 +176,93 @@ footer a{color:#cdd9f2}
 .site-desc{margin:6px 0 10px;color:var(--ink-soft);font-size:16px}
 .site-tag{display:inline-block;font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:#e3edff;color:var(--navy);padding:3px 11px;border-radius:11px}
 
-@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}}
+/* share box (sharable snippets, no duplicate content) */
+.share-box{margin-top:46px;background:linear-gradient(135deg,#0a2a66 0%,#06184a 100%);border-radius:14px;padding:30px;color:#fff;border-top:6px solid var(--red)}
+.share-box-head h3{font-family:var(--display);font-weight:700;font-size:24px;color:#fff;margin-bottom:8px}
+.share-box-head p{font-size:14px;color:#aebfe2;max-width:620px;margin-bottom:22px}
+.snippet-list{display:flex;flex-direction:column;gap:14px}
+.snippet{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:18px}
+.snippet-text{font-size:15px;line-height:1.55;color:#eef3ff;margin-bottom:14px}
+.snippet-actions{display:flex;flex-wrap:wrap;gap:8px}
+.snip-btn{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;padding:9px 15px;border-radius:6px;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.snip-btn.copy{background:#fff;color:var(--navy)}
+.snip-btn.copy:hover{background:var(--red);color:#fff}
+.snip-btn.x{background:#000;color:#fff}
+.snip-btn.fb{background:#1877f2;color:#fff}
+.snip-btn.li{background:#0a66c2;color:#fff}
+.snip-btn.x:hover,.snip-btn.fb:hover,.snip-btn.li:hover{opacity:.85}
+
+@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}}
 `;
 
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/**
+ * Build a "share this" box with ready-made, ORIGINAL share snippets.
+ *
+ * Key point for SEO: these snippets are short, hand-framed micro-copy — NOT a
+ * copy of the article body. People share the snippet + a link back, so the
+ * canonical long-form content stays unique to this page (no duplicate content
+ * scattered across the web). Share intents read the live URL at runtime via
+ * location.href, so it works on any host without knowing the domain at build.
+ */
+function shareBox(title, keyword, type = 'article') {
+  const noun = type === 'guide' ? 'guide' : 'read';
+  const snippets = [
+    {
+      text: `⚠️ ${title} — the clear, no-nonsense breakdown. Read it, then send it to someone who needs it. 👇`,
+      tags: ['#DriveSober', '#DUIAwareness', CAMPAIGN],
+    },
+    {
+      text: `Not sure about ${keyword}? Most people aren't. We laid out the facts in plain English — because knowing keeps people safe. 🚗`,
+      tags: ['#RoadSafety', '#KnowYourRights', CAMPAIGN],
+    },
+    {
+      text: `${title}: a 2-minute ${noun} that could change a decision tonight. Plan the ride, know the facts, get everyone home. 🔗`,
+      tags: ['#DontDrinkAndDrive', '#ArriveAlive', CAMPAIGN],
+    },
+  ];
+
+  const rows = snippets
+    .map((s) => {
+      const full = `${s.text} ${s.tags.join(' ')}`;
+      return `<div class="snippet" data-text="${esc(full)}">
+      <p class="snippet-text">${esc(full)}</p>
+      <div class="snippet-actions">
+        <button class="snip-btn copy">Copy</button>
+        <a class="snip-btn x" target="_blank" rel="noopener">Post to X</a>
+        <a class="snip-btn fb" target="_blank" rel="noopener">Facebook</a>
+        <a class="snip-btn li" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>`;
+    })
+    .join('\n');
+
+  return `<div class="share-box">
+  <div class="share-box-head">
+    <h3>📣 Share this — snippets ready to go</h3>
+    <p>Original share copy (not a paste of the article, so no duplicate-content issues). Pick one, copy or post it, and it links right back to this page.</p>
+  </div>
+  <div class="snippet-list">${rows}</div>
+</div>
+<script>
+(function(){
+  var url=encodeURIComponent(location.href);
+  document.querySelectorAll('.snippet').forEach(function(s){
+    var text=s.getAttribute('data-text'), enc=encodeURIComponent(text);
+    var x=s.querySelector('.x'); if(x)x.href='https://twitter.com/intent/tweet?text='+enc+'&url='+url;
+    var fb=s.querySelector('.fb'); if(fb)fb.href='https://www.facebook.com/sharer/sharer.php?u='+url+'&quote='+enc;
+    var li=s.querySelector('.li'); if(li)li.href='https://www.linkedin.com/sharing/share-offsite/?url='+url;
+    var c=s.querySelector('.copy'); if(c)c.addEventListener('click',function(){
+      navigator.clipboard.writeText(text+' '+location.href).then(function(){
+        c.textContent='Copied!';setTimeout(function(){c.textContent='Copy';},1500);
+      });
+    });
+  });
+})();
+</script>`;
+}
 
 function brandBar(current, prefix = '') {
   const link = (href, label, key) =>
@@ -276,6 +358,7 @@ function renderGuide(g) {
   ${lessons}
   <div class="faq-wrap"><h2>Frequently Asked Questions</h2>${faqs}</div>
   <div class="hashtags">${chips}</div>
+  ${shareBox(g.title, g.targetKeyword, 'guide')}
   <div class="cta-band">
     <h2>The best case is the one that never happens.</h2>
     <p>We're here to help at every step — but the safest road is a planned, sober ride, every single time.</p>
@@ -352,6 +435,7 @@ function renderArticle(a) {
   <a class="backlink" href="../index.html#articles">← All articles</a>
   <div class="article-body">${a.html}</div>
   <div class="hashtags">${chips}</div>
+  ${shareBox(a.title, a.targetKeyword, 'article')}
 </main>`;
   return page({ title: a.metaTitle, description: a.metaDescription, schema, body, current: 'articles', prefix: '../' });
 }
