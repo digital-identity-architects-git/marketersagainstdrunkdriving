@@ -1,0 +1,60 @@
+# Render Blueprint for Marketers Against Drunk Driving (dynamic app).
+#
+# Deploys the whole dynamic platform in one place:
+#   - a managed PostgreSQL database
+#   - the Node/Express API (tables auto-create on first boot)
+#   - the static React dashboard
+#
+# How to use:
+#   1. Push this repo to GitHub.
+#   2. In Render: New -> Blueprint -> pick this repo -> Apply.
+#   3. When prompted, paste the two secret keys (marked sync:false below).
+#
+# Note: `npm install --include=dev` is used so TypeScript/Vite (devDependencies)
+# are available at build time even though NODE_ENV=production.
+
+databases:
+  - name: madd-db
+    databaseName: madd
+    plan: free
+
+services:
+  # ---- Backend API (Node + Express) ----
+  - type: web
+    name: madd-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: madd-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: SERP_API_KEY
+        sync: false
+
+  # ---- Frontend dashboard (static React build) ----
+  - type: web
+    name: madd-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install --include=dev && npm run build
+    staticPublishPath: dist
+    envVars:
+      # Point the dashboard at the API service above. The default Render URL is
+      # https://<service-name>.onrender.com. If Render appends a suffix because
+      # the name was taken (e.g. madd-api-1), update this value to match.
+      - key: VITE_API_BASE_URL
+        value: https://madd-api.onrender.com
+    routes:
+      # SPA fallback so client-side routes resolve on refresh.
+      - type: rewrite
+        source: /*
+        destination: /index.html
