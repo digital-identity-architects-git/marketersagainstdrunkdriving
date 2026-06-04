@@ -1,0 +1,21 @@
+# Cloudflare Workers (static assets) config for the public site.
+#
+# This makes the "Workers Builds" Git integration succeed: it regenerates the
+# static site from the committed content and serves the site/ folder directly.
+# An assets-only Worker needs no script (no `main`), so there is nothing to
+# compile beyond running the generator.
+#
+# Note: `name` must match the Worker service. If you have a duplicate project
+# (e.g. "marketersagainstdrunkdriving1"), delete it — only the service whose
+# name matches below will deploy correctly from this file.
+name = "marketersagainstdrunkdriving"
+compatibility_date = "2026-06-01"
+
+# Regenerate site/ from backend/dist/content before deploying. No npm install
+# or compile step is required for this generator.
+[build]
+command = "npm run build:pages"
+
+# Serve the generated HTML directly from the global CDN.
+[assets]
+directory = "./site"
