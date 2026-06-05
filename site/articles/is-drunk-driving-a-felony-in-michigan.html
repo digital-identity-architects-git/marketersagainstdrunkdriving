@@ -167,7 +167,51 @@ footer a{color:#cdd9f2}
 .snip-btn.li{background:#0a66c2;color:#fff}
 .snip-btn.x:hover,.snip-btn.fb:hover,.snip-btn.li:hover{opacity:.85}
 
-@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}}
+/* ===== web design services ===== */
+.svc-lede{max-width:760px;color:var(--ink-soft);font-size:19px;margin-bottom:8px}
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:22px;margin:26px 0 8px}
+.price-card{position:relative;background:#fff;border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:14px;padding:32px 28px 28px;box-shadow:0 2px 12px rgba(10,42,102,.06);display:flex;flex-direction:column;transition:.18s}
+.price-card:hover{transform:translateY(-5px);box-shadow:0 14px 32px rgba(10,42,102,.14)}
+.price-card.featured{border-top-color:var(--red);box-shadow:0 10px 30px rgba(200,16,46,.16)}
+.price-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--red);color:#fff;padding:5px 15px;border-radius:20px;white-space:nowrap}
+.price-tier{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+.price-pages{font-family:var(--display);font-weight:700;font-size:21px;color:var(--navy);margin-top:6px}
+.price-amount{font-family:var(--display);font-weight:700;font-size:46px;color:var(--navy);line-height:1;margin:16px 0 2px}
+.price-amount span{font-size:22px;color:var(--ink-mute);vertical-align:super;margin-right:1px}
+.price-note{font-size:14px;color:var(--ink-mute);margin-bottom:20px}
+.price-feat{list-style:none;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:11px}
+.price-feat li{position:relative;padding-left:28px;font-size:15px;color:var(--ink-soft);line-height:1.4}
+.price-feat li::before{content:"✓";position:absolute;left:0;top:1px;width:19px;height:19px;background:#e9f4ea;color:#2e7d32;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.price-card .btn-hero{margin-top:auto;text-align:center;display:block}
+.price-card.featured .btn-hero{background:var(--navy)}
+.price-card.featured .btn-hero:hover{background:var(--red);color:#fff}
+
+/* showcase gallery of pretty sites */
+.showcase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;margin-top:8px}
+.showcase{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 3px 14px rgba(10,42,102,.07);transition:.2s}
+.showcase:hover{transform:translateY(-6px);box-shadow:0 16px 38px rgba(10,42,102,.17)}
+.bbar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#dde4f1;border-bottom:1px solid #cdd6e8}
+.bdot{width:10px;height:10px;border-radius:50%}
+.burl{font-family:var(--display);font-size:10.5px;color:#7a87a3;background:#fff;border-radius:5px;padding:3px 10px;flex:1;letter-spacing:.02em;margin-left:8px}
+.bview{height:215px;position:relative;overflow:hidden}
+.showcase-cap{padding:16px 18px}
+.showcase-cap .tag{font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red)}
+.showcase-cap h3{font-family:var(--display);font-weight:600;font-size:18px;color:var(--navy);margin:4px 0 4px}
+.showcase-cap p{font-size:13.5px;color:var(--ink-mute);line-height:1.5}
+.mock{position:absolute;inset:0;font-family:var(--display);overflow:hidden}
+.mock-nav{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;font-size:8px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.mock-links{display:flex;gap:11px;opacity:.85;font-weight:500}
+.mock-btn{display:inline-block;font-size:7.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:6px 13px;border-radius:20px;margin-top:10px}
+.svc-incl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:10px}
+.svc-incl-item{background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:9px;padding:18px 20px}
+.svc-incl-item h4{font-family:var(--display);font-weight:600;font-size:16px;color:var(--navy);margin-bottom:6px}
+.svc-incl-item p{font-size:14px;color:var(--ink-soft)}
+.svc-step{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px}
+.svc-step .n{font-family:var(--display);font-weight:700;font-size:16px;width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--navy);color:#fff;border-radius:9px}
+.svc-step h4{font-family:var(--display);font-weight:600;font-size:18px;color:var(--navy);margin-bottom:3px}
+.svc-step p{font-size:15px;color:var(--ink-soft);margin:0}
+
+@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}.price-amount{font-size:42px}}
 </style></head>
 <body>
 <div class="brand-bar"><div class="brand-inner">
@@ -181,6 +225,7 @@ footer a{color:#cdd9f2}
     <a href="../index.html#guides">Guides</a>
     <a href="../index.html#articles" class="current">Articles</a>
     <a href="../best-drunk-driving-sites-to-follow.html">Follow</a>
+    <a href="../web-design-services.html">Web Design</a>
   </nav>
 </div></div>
 

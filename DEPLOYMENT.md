@@ -1,191 +1,145 @@
-# Deployment Guide - Siteground
+# Deployment Guide — Dynamic App on SiteGround
+
+This guide covers deploying the **full dynamic platform** (Node.js API +
+React dashboard + database). If all you need is the public content site, see
+[CLOUDFLARE-DEPLOY.md](./CLOUDFLARE-DEPLOY.md) — it is dramatically simpler
+(static HTML, no server, no database, no API keys).
+
+## ⚠️ Read this first — SiteGround specifics
+
+1. **SiteGround does not offer PostgreSQL** — only MySQL/MariaDB. This app
+   relies on Postgres-only features (`gen_random_uuid()`, `UUID[]`/`TEXT[]`
+   array columns in `backend/src/db/connection.ts`), so it will **not** run on
+   MySQL without a rewrite. Use a free managed Postgres instead — **Neon**
+   (neon.tech) or **Supabase** — and point `DATABASE_URL` at it. The SiteGround
+   Node app connects out to it. No code changes needed.
+
+2. **You do not need to migrate by hand.** The server creates every table on
+   startup via `initDatabase()`. `npm run db:migrate` is available to provision
+   a fresh database before the first deploy, but a successful server boot also
+   creates the schema.
+
+3. **The Node app only serves `/api`** — it does not serve the React app. The
+   frontend is a separate static build that calls the API. You connect the two
+   either with a same-origin reverse proxy (the shipped `.htaccess`) or by
+   pointing the frontend at an API subdomain via `VITE_API_BASE_URL`.
+
+## Architecture
+
+```
+Browser → yourdomain.com
+            ├── /         → static React build (public_html/)        [Apache]
+            └── /api/*    → Node.js app (Passenger)                  [proxied]
+                              └── connects out to → Neon/Supabase Postgres
+```
 
 ## Prerequisites
-- Siteground hosting account with Node.js support
-- PostgreSQL database (Siteground provides this)
-- Domain: marketersagainstdrunkdriving.com (point to Siteground)
+- SiteGround hosting with Node.js support (Devtools → Node.js)
+- A managed Postgres database (Neon/Supabase) — see note above
+- Anthropic API key (blog generation) and SERP API key (news)
+- Domain pointed at SiteGround
 
-## Deployment Steps
+## 1. Provision the database (≈5 min, free)
 
-### 1. Build Applications
+Create a project on neon.tech (or supabase.com) and copy the connection
+string. It looks like:
+
+```
+postgresql://user:pass@ep-xxxx.neon.tech/dbname?sslmode=require
+```
+
+Keep the `?sslmode=require` suffix — Neon requires SSL, and `pg` reads the SSL
+mode from the URL.
+
+## 2. Build locally
 
 ```bash
-# Build frontend
-cd frontend
-npm run build
+npm run install-all
+npm run build          # builds frontend → frontend/dist, backend → backend/dist
+```
 
-# Build backend
+Optionally provision the schema up front:
+
+```bash
 cd backend
-npm run build
+DATABASE_URL="postgresql://...?sslmode=require" npm run db:migrate
 ```
 
-### 2. Prepare for Siteground
+## 3. Deploy the backend (Node app)
 
-#### Create deployment structure:
-```
-public_html/
-├── dist/                    # React build (frontend)
-├── server/                  # Node.js application (backend)
-│   ├── dist/
-│   ├── package.json
-│   └── .env
-└── .htaccess
-```
-
-#### Create `.htaccess` for routing:
-```apache
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^ index.html [QSA,L]
-</IfModule>
-```
-
-### 3. Set Up Siteground Hosting
-
-1. **SSH Access**:
-   - Go to Siteground dashboard → Security → SSH Keys
-   - Generate and add your SSH key
-
-2. **Enable Node.js**:
-   - In Siteground: DevTools → Node.js → Create Application
-   - Node version: 18+
-   - Application root: `server`
+1. **Devtools → Node.js → Create Application**
+   - Node version: **18+**
+   - Application root: e.g. `madd-server`
    - Application startup file: `dist/index.js`
-
-3. **Set Up PostgreSQL**:
-   - Databases → Create New Database
-   - Note the connection details
-   - Add database user with password
-
-4. **Environment Variables**:
-   - In Node.js application settings, set environment variables:
+2. Upload to the app root (SFTP or Git):
+   - `backend/dist/`
+   - `backend/package.json`
+   - `backend/package-lock.json`
+3. SSH in and install production deps:
+   ```bash
+   cd ~/madd-server
+   npm install --production
    ```
+4. Set **environment variables** in the Node.js panel:
+   ```
+   DATABASE_URL=postgresql://...neon.tech/...?sslmode=require
    ANTHROPIC_API_KEY=your_key
    SERP_API_KEY=your_key
-   DATABASE_URL=postgresql://user:pass@host:port/dbname
-   FRONTEND_URL=https://marketersagainstdrunkdriving.com
    NODE_ENV=production
+   PORT=3000            # or whatever SiteGround assigns
    ```
+5. **Restart Application.** On first boot the tables are created automatically.
+   Verify: `curl http://127.0.0.1:<port>/api/health` from SSH.
 
-### 4. Deploy Code
+## 4. Deploy the frontend (static build)
 
-#### Via Git (Recommended):
+1. Upload the contents of `frontend/dist/` into `public_html/`.
+2. Confirm `public_html/.htaccess` exists — Vite copies it from
+   `frontend/public/.htaccess` into the build. It reverse-proxies `/api` to the
+   Node app and adds the SPA fallback. **Edit the port** in the proxy rule to
+   match the port SiteGround assigned your Node app.
 
-```bash
-# Set up repository
-git init
-git remote add siteground ssh://your_siteground_user@host.siteground.eu:~/project
+### If the `[P]` proxy flag is not allowed on your plan
 
-# Deploy
-git push siteground main
-```
+Some SiteGround plans don't permit `mod_proxy`. In that case:
 
-#### Via SFTP:
+1. Create a subdomain (e.g. `api.yourdomain.com`) and map it to the Node app.
+2. Remove the `RewriteRule ^api/...` line from `.htaccess`.
+3. Rebuild the frontend with the API base set:
+   ```bash
+   cd frontend
+   echo "VITE_API_BASE_URL=https://api.yourdomain.com" > .env.production
+   npm run build
+   ```
+   CORS is already enabled on the backend, so the cross-origin calls work.
 
-1. Connect to Siteground via SFTP (FileZilla, Cyberduck, etc.)
-2. Upload backend `dist/` files to `server/dist/`
-3. Upload frontend build files to `public_html/`
-4. Upload `package.json` to `server/`
+## 5. SSL
 
-### 5. Install Dependencies
+Enable free Let's Encrypt SSL in Site Tools → Security → SSL Manager, then
+force HTTPS.
 
-SSH into Siteground and run:
+## 6. Scheduled news scans (optional)
 
-```bash
-cd ~/server
-npm install --production
-```
-
-### 6. Run Database Migrations
-
-```bash
-npm run db:migrate
-```
-
-### 7. Start Application
-
-In Siteground Node.js dashboard, click "Restart Application"
-
-## DNS Configuration
-
-Point your domain to Siteground nameservers:
-```
-ns1.siteground.eu
-ns2.siteground.eu
-ns3.siteground.eu
-```
-
-Or set A records to Siteground's IP addresses.
-
-## SSL Certificate
-
-Siteground provides free SSL via Let's Encrypt. Enable it in the dashboard.
-
-## Monitoring & Logs
-
-SSH into server and check logs:
-```bash
-# Node.js application logs
-tail -f ~/.pm2/logs/server-error.log
-tail -f ~/.pm2/logs/server-out.log
-
-# PostgreSQL (if self-hosted)
-tail -f /var/log/postgresql/postgresql.log
-```
-
-## Scheduled Tasks
-
-Set up daily listener runs in Siteground Cron Jobs:
+The app runs a daily social-post scheduler in-process. To also run the 50-state
+news scanner on a schedule, add a SiteGround cron job:
 
 ```bash
-# Run at 6 AM daily
-0 6 * * * cd ~/server && npm run listeners:start
+# 6 AM daily — adjust path to your Node app root
+0 6 * * * cd ~/madd-server && node dist/listeners/orchestrator.js
 ```
-
-## Performance Optimization
-
-1. **Enable Caching**: Use Siteground's caching plugin for frontend
-2. **CDN**: Enable Cloudflare for static assets
-3. **Database Optimization**: Regularly analyze and optimize queries
 
 ## Troubleshooting
 
-### Application Won't Start
-- Check `server/.env` for correct DATABASE_URL
-- Verify Node.js version compatibility
-- Check error logs in Siteground dashboard
+| Symptom | Likely cause / fix |
+|---------|--------------------|
+| App won't start | Check `DATABASE_URL` (with `?sslmode=require`) and Node version in the Node.js panel logs |
+| `/api` 404s in the browser | `.htaccess` proxy port doesn't match the Node app port, or `[P]` not allowed — use the subdomain approach |
+| DB connection errors | Verify the Neon/Supabase string and that the suffix `?sslmode=require` is present |
+| Dashboard loads but no data | The DB is empty until the listeners run — trigger `node dist/listeners/orchestrator.js` |
 
-### Database Connection Failed
-- Verify DATABASE_URL format
-- Check firewall rules allow connection
-- Test connection with `psql` from SSH
+## Alternative hosts (simpler than SiteGround)
 
-### Out of Memory
-- Contact Siteground support for upgrade
-- Optimize blog generation batch sizes
-- Consider implementing caching
-
-## Backup & Recovery
-
-1. **Automated Backups**: Siteground provides daily backups
-2. **Database Backups**: 
-   ```bash
-   pg_dump -h host -U user -d dbname > backup.sql
-   ```
-
-## Rolling Updates
-
-1. Build and test locally
-2. Create git branch for changes
-3. Push to Siteground
-4. Verify application restarts successfully
-5. Monitor error logs for issues
-
-## Support
-
-- Siteground Support: https://www.siteground.com/contact
-- Application Issues: Create GitHub issue
-- API Issues: Contact respective API providers
+Because SiteGround forces an external Postgres and Passenger proxying, hosts
+like **Render** or **Railway** are usually easier for this stack — they provide
+Node + Postgres together with git-push deploys, skipping the external-DB and
+`.htaccess` steps entirely.

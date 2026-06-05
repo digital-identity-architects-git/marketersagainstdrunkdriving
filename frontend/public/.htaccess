@@ -1,0 +1,24 @@
+# Apache config for the MADD dashboard (static React build) on SiteGround.
+#
+# This file is copied into the build output (and therefore into public_html)
+# by Vite. It does two things:
+#   1. Reverse-proxies /api/* to the local Node.js application so the frontend
+#      and API share one origin (the default, relative-/api setup).
+#   2. Falls back to index.html so client-side routing works on refresh.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Forward API calls to the Node app. Change the port to the one SiteGround
+  # assigned your Node application (Devtools -> Node.js).
+  #
+  # If your plan does not allow the [P] proxy flag, remove this rule, run the
+  # API on a subdomain instead, and build the frontend with
+  # VITE_API_BASE_URL set to that subdomain (see DEPLOYMENT.md).
+  RewriteRule ^api/(.*)$ http://127.0.0.1:3000/api/$1 [P,L]
+
+  # SPA fallback: serve index.html for anything that is not a real file/dir.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [QSA,L]
+</IfModule>
