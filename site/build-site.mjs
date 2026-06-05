@@ -192,7 +192,51 @@ footer a{color:#cdd9f2}
 .snip-btn.li{background:#0a66c2;color:#fff}
 .snip-btn.x:hover,.snip-btn.fb:hover,.snip-btn.li:hover{opacity:.85}
 
-@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}}
+/* ===== web design services ===== */
+.svc-lede{max-width:760px;color:var(--ink-soft);font-size:19px;margin-bottom:8px}
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:22px;margin:26px 0 8px}
+.price-card{position:relative;background:#fff;border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:14px;padding:32px 28px 28px;box-shadow:0 2px 12px rgba(10,42,102,.06);display:flex;flex-direction:column;transition:.18s}
+.price-card:hover{transform:translateY(-5px);box-shadow:0 14px 32px rgba(10,42,102,.14)}
+.price-card.featured{border-top-color:var(--red);box-shadow:0 10px 30px rgba(200,16,46,.16)}
+.price-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--red);color:#fff;padding:5px 15px;border-radius:20px;white-space:nowrap}
+.price-tier{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--red)}
+.price-pages{font-family:var(--display);font-weight:700;font-size:21px;color:var(--navy);margin-top:6px}
+.price-amount{font-family:var(--display);font-weight:700;font-size:46px;color:var(--navy);line-height:1;margin:16px 0 2px}
+.price-amount span{font-size:22px;color:var(--ink-mute);vertical-align:super;margin-right:1px}
+.price-note{font-size:14px;color:var(--ink-mute);margin-bottom:20px}
+.price-feat{list-style:none;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:11px}
+.price-feat li{position:relative;padding-left:28px;font-size:15px;color:var(--ink-soft);line-height:1.4}
+.price-feat li::before{content:"✓";position:absolute;left:0;top:1px;width:19px;height:19px;background:#e9f4ea;color:#2e7d32;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.price-card .btn-hero{margin-top:auto;text-align:center;display:block}
+.price-card.featured .btn-hero{background:var(--navy)}
+.price-card.featured .btn-hero:hover{background:var(--red);color:#fff}
+
+/* showcase gallery of pretty sites */
+.showcase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;margin-top:8px}
+.showcase{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 3px 14px rgba(10,42,102,.07);transition:.2s}
+.showcase:hover{transform:translateY(-6px);box-shadow:0 16px 38px rgba(10,42,102,.17)}
+.bbar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#dde4f1;border-bottom:1px solid #cdd6e8}
+.bdot{width:10px;height:10px;border-radius:50%}
+.burl{font-family:var(--display);font-size:10.5px;color:#7a87a3;background:#fff;border-radius:5px;padding:3px 10px;flex:1;letter-spacing:.02em;margin-left:8px}
+.bview{height:215px;position:relative;overflow:hidden}
+.showcase-cap{padding:16px 18px}
+.showcase-cap .tag{font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red)}
+.showcase-cap h3{font-family:var(--display);font-weight:600;font-size:18px;color:var(--navy);margin:4px 0 4px}
+.showcase-cap p{font-size:13.5px;color:var(--ink-mute);line-height:1.5}
+.mock{position:absolute;inset:0;font-family:var(--display);overflow:hidden}
+.mock-nav{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;font-size:8px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.mock-links{display:flex;gap:11px;opacity:.85;font-weight:500}
+.mock-btn{display:inline-block;font-size:7.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:6px 13px;border-radius:20px;margin-top:10px}
+.svc-incl{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:10px}
+.svc-incl-item{background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:9px;padding:18px 20px}
+.svc-incl-item h4{font-family:var(--display);font-weight:600;font-size:16px;color:var(--navy);margin-bottom:6px}
+.svc-incl-item p{font-size:14px;color:var(--ink-soft)}
+.svc-step{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px}
+.svc-step .n{font-family:var(--display);font-weight:700;font-size:16px;width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--navy);color:#fff;border-radius:9px}
+.svc-step h4{font-family:var(--display);font-weight:600;font-size:18px;color:var(--navy);margin-bottom:3px}
+.svc-step p{font-size:15px;color:var(--ink-soft);margin:0}
+
+@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}.price-amount{font-size:42px}}
 `;
 
 const esc = (s) =>
@@ -278,6 +322,7 @@ function brandBar(current, prefix = '') {
     ${link('index.html#guides', 'Guides', 'guides')}
     ${link('index.html#articles', 'Articles', 'articles')}
     ${link('best-drunk-driving-sites-to-follow.html', 'Follow', 'follow')}
+    ${link('web-design-services.html', 'Web Design', 'services')}
   </nav>
 </div></div>`;
 }
@@ -508,6 +553,17 @@ function renderHome() {
     </a>
   </div>
 
+  <div class="hub-section" id="services">
+    <h2>Need a website?</h2>
+    <p class="lede">This whole campaign is built on one skill: getting the right message in front of the right people. I do the same for small businesses — fast, beautiful, conversion-focused websites with simple flat pricing.</p>
+    <a class="card" href="web-design-services.html" style="max-width:420px">
+      <div class="kicker">Web Design &amp; Development</div>
+      <h3>Custom Websites from $500</h3>
+      <p>5-page sites $500 · 10-page $999 · 20-page $1500. Mobile-first, SEO-ready, and yours to keep.</p>
+      <div class="meta">Flat pricing · See examples →</div>
+    </a>
+  </div>
+
   <div class="cta-band">
     <h2>Care for everyone. Get everyone home.</h2>
     <p>Our brand voice stays helpful as long as people are trying to do right. Plan the ride, hand over the keys, and share the message.</p>
@@ -674,6 +730,291 @@ function renderFollow() {
   });
 }
 
+/* ---------------------------- WEB DESIGN SERVICES ---------------------------- */
+const CONTACT_EMAIL = 'bristereric713@gmail.com';
+
+const pricingTiers = [
+  {
+    tier: 'Starter',
+    pages: '5-Page Website',
+    amount: '500',
+    note: 'Perfect for a clean, credible presence that converts.',
+    features: [
+      'Up to 5 custom-designed pages',
+      'Mobile-first, fully responsive build',
+      'On-page SEO foundations baked in',
+      'Contact form + click-to-call',
+      'Fast, lightweight, no bloat',
+      '1 round of revisions',
+    ],
+    featured: false,
+  },
+  {
+    tier: 'Growth',
+    pages: '10-Page Website',
+    amount: '999',
+    note: 'The sweet spot for most small businesses.',
+    features: [
+      'Up to 10 custom-designed pages',
+      'Everything in Starter, plus:',
+      'Blog or articles section set up',
+      'Google Business + analytics wired in',
+      'Lead-capture & basic automations',
+      'Copy polish on every page',
+      '2 rounds of revisions',
+    ],
+    featured: true,
+  },
+  {
+    tier: 'Authority',
+    pages: '20-Page Website',
+    amount: '1500',
+    note: 'A full content engine built to rank and scale.',
+    features: [
+      'Up to 20 custom-designed pages',
+      'Everything in Growth, plus:',
+      'Full SEO content architecture',
+      'Custom interactive sections',
+      'Conversion-focused landing pages',
+      'Speed & Core Web Vitals tuning',
+      '3 rounds of revisions + priority support',
+    ],
+    featured: false,
+  },
+];
+
+/* Self-contained CSS "browser" mockups — pretty sites, zero external images. */
+const showcaseSites = [
+  {
+    url: 'lumiere.restaurant',
+    name: 'Lumière',
+    tag: 'Fine Dining',
+    desc: 'Moody, elegant, and built around the reservation — the kind of site that makes a table feel earned.',
+    mock: `<div class="mock" style="background:radial-gradient(130% 90% at 50% -10%,#33281a 0%,#0d0a06 70%)">
+      <div class="mock-nav" style="color:#e9d8a6"><span style="font-family:var(--serif);font-style:italic;font-size:12px;letter-spacing:.04em">Lumière</span><span class="mock-links"><span>Menu</span><span>Wine</span><span>Visit</span></span></div>
+      <div style="text-align:center;padding:22px 16px 0">
+        <div style="color:#caa75a;font-size:8px;letter-spacing:.34em;text-transform:uppercase">Est. 2014 · Prix Fixe</div>
+        <div style="font-family:var(--serif);font-style:italic;color:#fbf3df;font-size:25px;line-height:1.05;margin-top:10px">A Tasting of<br>the Season</div>
+        <span class="mock-btn" style="background:linear-gradient(#d9b878,#bb9145);color:#1a140b">Reserve a Table</span>
+      </div>
+    </div>`,
+  },
+  {
+    url: 'nimbus.io',
+    name: 'Nimbus',
+    tag: 'SaaS / Tech',
+    desc: 'A vivid gradient hero, crisp product UI, and a CTA you can\'t miss — modern SaaS done right.',
+    mock: `<div class="mock" style="background:linear-gradient(135deg,#6d28d9 0%,#4f46e5 55%,#0ea5e9 100%)">
+      <div class="mock-nav" style="color:#fff"><span style="font-weight:700;font-size:11px;letter-spacing:.02em">◇ Nimbus</span><span class="mock-links"><span>Product</span><span>Pricing</span><span>Docs</span></span></div>
+      <div style="padding:18px 18px 0">
+        <div style="color:#fff;font-size:21px;font-weight:700;line-height:1.1;max-width:78%">Ship faster.<br>Stress less.</div>
+        <div style="color:#e9e2ff;font-size:8.5px;margin-top:7px;max-width:70%;font-weight:500">The all-in-one workspace for teams that move.</div>
+        <span class="mock-btn" style="background:#fff;color:#4f46e5">Start free →</span>
+      </div>
+      <div style="position:absolute;right:-26px;bottom:-22px;width:130px;height:96px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);border-radius:12px 0 0 0;backdrop-filter:blur(2px)"></div>
+    </div>`,
+  },
+  {
+    url: 'verdant.co',
+    name: 'Verdant Wellness',
+    tag: 'Health & Spa',
+    desc: 'Soft, organic, and calming — earthy tones and generous whitespace that breathe trust.',
+    mock: `<div class="mock" style="background:linear-gradient(160deg,#f3f6ec 0%,#e3eed9 100%)">
+      <div class="mock-nav" style="color:#3f5e3a"><span style="font-weight:700;font-size:11px">❧ Verdant</span><span class="mock-links"><span>Treatments</span><span>About</span><span>Book</span></span></div>
+      <div style="padding:20px 18px 0">
+        <div style="font-family:var(--serif);color:#2f4a2c;font-size:23px;line-height:1.08;max-width:80%">Rest is a<br><span style="font-style:italic;color:#6f8f4f">ritual.</span></div>
+        <div style="color:#5d7257;font-size:8.5px;margin-top:7px;max-width:72%">Massage, sauna, and stillness, just outside the city.</div>
+        <span class="mock-btn" style="background:#4f7a3f;color:#fff">Book a session</span>
+      </div>
+      <div style="position:absolute;right:14px;top:54px;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#cfe3b6,#8fae6c)"></div>
+    </div>`,
+  },
+  {
+    url: 'atelier-nord.studio',
+    name: 'Atelier Nord',
+    tag: 'Design Studio',
+    desc: 'Confident, editorial, monochrome. Oversized type and ruthless restraint — a portfolio that sells.',
+    mock: `<div class="mock" style="background:#f4f4f2">
+      <div class="mock-nav" style="color:#111"><span style="font-weight:700;font-size:11px;letter-spacing:.04em">ATELIER NORD</span><span class="mock-links"><span>Work</span><span>Studio</span><span>Contact</span></span></div>
+      <div style="padding:16px 18px 0">
+        <div style="color:#111;font-size:30px;font-weight:700;line-height:.95;letter-spacing:-.02em">Design<br>with<br>intent.</div>
+        <div style="display:inline-block;margin-top:10px;border-bottom:2px solid #111;font-size:8px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding-bottom:2px">Selected Work ↘</div>
+      </div>
+      <div style="position:absolute;right:16px;bottom:16px;width:48px;height:48px;background:#c8102e"></div>
+    </div>`,
+  },
+  {
+    url: 'coastlinerealty.com',
+    name: 'Coastline Realty',
+    tag: 'Real Estate',
+    desc: 'Big, aspirational imagery, a clean search bar, and listings that feel like a vacation.',
+    mock: `<div class="mock" style="background:linear-gradient(180deg,#0c4a6e 0%,#0e7490 48%,#67c5d8 100%)">
+      <div class="mock-nav" style="color:#fff"><span style="font-weight:700;font-size:11px">⌂ Coastline</span><span class="mock-links"><span>Buy</span><span>Sell</span><span>Agents</span></span></div>
+      <div style="padding:18px 18px 0;text-align:center">
+        <div style="color:#fff;font-size:20px;font-weight:700;line-height:1.1">Find your<br>place by the sea</div>
+        <div style="background:#fff;border-radius:24px;margin:12px auto 0;width:78%;padding:7px 12px;display:flex;justify-content:space-between;align-items:center">
+          <span style="color:#94a3b8;font-size:8px">City, ZIP, or address…</span>
+          <span style="background:#0e7490;color:#fff;font-size:7px;font-weight:700;padding:4px 9px;border-radius:14px">Search</span>
+        </div>
+      </div>
+    </div>`,
+  },
+  {
+    url: 'bloomandco.shop',
+    name: 'Bloom & Co.',
+    tag: 'E-commerce',
+    desc: 'Playful, warm, and built to sell — product-first layout with a checkout that never gets in the way.',
+    mock: `<div class="mock" style="background:linear-gradient(150deg,#fff1f4 0%,#ffe1ec 100%)">
+      <div class="mock-nav" style="color:#9d174d"><span style="font-weight:700;font-size:11px">✿ Bloom &amp; Co.</span><span class="mock-links"><span>Shop</span><span>Gifts</span><span>Cart (2)</span></span></div>
+      <div style="padding:16px 18px 0">
+        <div style="font-family:var(--serif);color:#831843;font-size:22px;line-height:1.05;max-width:74%">Fresh blooms,<br><span style="font-style:italic;color:#db2777">delivered.</span></div>
+        <span class="mock-btn" style="background:#db2777;color:#fff">Shop bestsellers</span>
+      </div>
+      <div style="position:absolute;right:14px;top:48px;display:flex;gap:8px">
+        <div style="width:46px;height:58px;background:#fff;border-radius:8px;box-shadow:0 4px 10px rgba(157,23,77,.18)"></div>
+        <div style="width:46px;height:58px;background:#fff;border-radius:8px;box-shadow:0 4px 10px rgba(157,23,77,.18);margin-top:10px"></div>
+      </div>
+    </div>`,
+  },
+];
+
+function renderServices() {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: 'Web design and development',
+    provider: {
+      '@type': 'Organization',
+      name: 'Marketers Against Drunk Driving',
+      founder: 'Eric Brister',
+    },
+    areaServed: 'US',
+    description:
+      'Custom, conversion-focused web design and development. Fast, mobile-first, SEO-ready websites in 5, 10, and 20-page packages.',
+    offers: pricingTiers.map((t) => ({
+      '@type': 'Offer',
+      name: `${t.pages} — ${t.tier}`,
+      price: t.amount,
+      priceCurrency: 'USD',
+    })),
+  };
+
+  const priceCards = pricingTiers
+    .map(
+      (t) => `<div class="price-card${t.featured ? ' featured' : ''}">
+    ${t.featured ? '<div class="price-badge">Most Popular</div>' : ''}
+    <div class="price-tier">${esc(t.tier)}</div>
+    <div class="price-pages">${esc(t.pages)}</div>
+    <div class="price-amount"><span>$</span>${esc(t.amount)}</div>
+    <div class="price-note">${esc(t.note)}</div>
+    <ul class="price-feat">${t.features.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
+    <a class="btn-hero" href="mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+        `Website project — ${t.pages}`
+      )}">Get started</a>
+  </div>`
+    )
+    .join('\n');
+
+  const showcaseCards = showcaseSites
+    .map(
+      (s) => `<div class="showcase">
+    <div class="bbar">
+      <span class="bdot" style="background:#ff5f57"></span><span class="bdot" style="background:#febc2e"></span><span class="bdot" style="background:#28c840"></span>
+      <span class="burl">${esc(s.url)}</span>
+    </div>
+    <div class="bview">${s.mock}</div>
+    <div class="showcase-cap">
+      <span class="tag">${esc(s.tag)}</span>
+      <h3>${esc(s.name)}</h3>
+      <p>${esc(s.desc)}</p>
+    </div>
+  </div>`
+    )
+    .join('\n');
+
+  const included = [
+    ['Mobile-first & responsive', 'Looks sharp on every phone, tablet, and desktop — designed small-screen first.'],
+    ['SEO built in', 'Clean markup, fast load times, metadata, and a sitemap so Google can actually find you.'],
+    ['Fast & secure', 'Lightweight builds that load in a blink, with HTTPS and modern best practices.'],
+    ['You own it', 'No lock-in. The site is yours — hosting, domain, and files included in the handoff.'],
+  ]
+    .map(
+      ([h, p]) => `<div class="svc-incl-item"><h4>${esc(h)}</h4><p>${esc(p)}</p></div>`
+    )
+    .join('\n');
+
+  const steps = [
+    ['Discovery', 'A quick call to learn your business, goals, and the look you\'re after. Flat quote, no surprises.'],
+    ['Design', 'I design your pages around what makes people act — then you review and refine.'],
+    ['Build', 'Your site is built fast, responsive, and SEO-ready, with the revisions in your package.'],
+    ['Launch', 'We go live, connect analytics, and hand over everything. You\'re ready to grow.'],
+  ]
+    .map(
+      ([h, p], i) => `<div class="svc-step"><div class="n">${i + 1}</div><div><h4>${esc(
+        h
+      )}</h4><p>${esc(p)}</p></div></div>`
+    )
+    .join('\n');
+
+  const body = `
+<header class="hero"><div class="hero-inner">
+  <div class="eyebrow"><span class="pulse"></span>WEB DESIGN &amp; DEVELOPMENT</div>
+  <h1>Websites that <em>work</em> as hard as you do.</h1>
+  <div class="subtitle">I'm an SEO and brand builder — and I build fast, beautiful, conversion-focused websites for small businesses. Clear flat pricing, no monthly traps.</div>
+  <p class="hero-tag">Same skill that powers this campaign, pointed at your business: get the right message in front of the right people, and turn visitors into customers.</p>
+  <div style="margin-top:30px"><a class="btn-hero" href="#pricing">See pricing →</a></div>
+</div></header>
+<main class="wrap" style="max-width:1100px">
+  <a class="backlink" href="index.html">← Back home</a>
+
+  <div class="hub-section" id="pricing">
+    <h2>Simple, flat pricing</h2>
+    <p class="svc-lede">Pick the size that fits. Every package is a custom design — no templates phoned in, no surprise add-ons. One price, one beautiful site.</p>
+    <div class="price-grid">${priceCards}</div>
+    <p style="font-size:13.5px;color:var(--ink-mute);margin-top:14px">Need something bigger — e-commerce, a web app, or ongoing SEO? <a href="mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+    'Custom website project'
+  )}">Let\'s talk custom →</a></p>
+  </div>
+
+  <div class="hub-section">
+    <h2>A few pretty sites for inspiration</h2>
+    <p class="svc-lede">Here's the range of looks I build — from elegant and editorial to bold and modern. Yours is designed from scratch around your brand.</p>
+    <div class="showcase-grid">${showcaseCards}</div>
+  </div>
+
+  <div class="hub-section">
+    <h2>In every build</h2>
+    <p class="svc-lede">No matter the package, these come standard.</p>
+    <div class="svc-incl">${included}</div>
+  </div>
+
+  <div class="hub-section">
+    <h2>How it works</h2>
+    <p class="svc-lede">A simple, four-step process from idea to launch.</p>
+    ${steps}
+  </div>
+
+  <div class="cta-band">
+    <h2>Let's build something you're proud of.</h2>
+    <p>Tell me about your business and what you need. I'll send back a clear, flat quote — usually within a day.</p>
+    <div style="margin-top:18px"><a class="btn-hero" style="background:#fff;color:var(--navy)" href="mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
+    'Website project inquiry'
+  )}">Start your project →</a></div>
+    <p style="margin-top:16px;font-size:14px;color:#ffe2e6">Or email <strong>${CONTACT_EMAIL}</strong></p>
+  </div>
+</main>`;
+
+  return page({
+    title: 'Web Design Services — Custom Websites from $500 | MADD',
+    description:
+      'Custom, conversion-focused web design and development for small businesses. Flat pricing: 5-page site $500, 10-page $999, 20-page $1500. Fast, mobile-first, and SEO-ready.',
+    schema,
+    body,
+    current: 'services',
+    prefix: '',
+  });
+}
+
 /* ---------------------------- WRITE ---------------------------- */
 mkdirSync(join(__dirname, 'guides'), { recursive: true });
 mkdirSync(join(__dirname, 'articles'), { recursive: true });
@@ -687,6 +1028,7 @@ for (const a of seoArticles) {
 writeFileSync(join(__dirname, 'index.html'), renderHome());
 writeFileSync(join(__dirname, 'about.html'), renderAbout());
 writeFileSync(join(__dirname, 'best-drunk-driving-sites-to-follow.html'), renderFollow());
+writeFileSync(join(__dirname, 'web-design-services.html'), renderServices());
 
 /* ---------------------------- SITEMAP + ROBOTS ---------------------------- */
 const BASE_URL = 'https://marketersagainstdrunkdriving.com';
@@ -696,6 +1038,7 @@ const urls = [
   { loc: '', priority: '1.0', lastmod: today },
   { loc: 'about.html', priority: '0.7', lastmod: today },
   { loc: 'best-drunk-driving-sites-to-follow.html', priority: '0.8', lastmod: today },
+  { loc: 'web-design-services.html', priority: '0.7', lastmod: today },
   ...guides.map((g) => ({ loc: `guides/${g.slug}.html`, priority: '0.8', lastmod: today })),
   ...seoArticles.map((a) => ({
     loc: `articles/${a.slug}.html`,
@@ -743,11 +1086,14 @@ ${guides.map((g) => `- [${g.title}](${BASE_URL}/guides/${g.slug}.html): ${g.meta
 
 ## Resources
 - [The 20 Best Drunk Driving Sites to Follow](${BASE_URL}/best-drunk-driving-sites-to-follow.html): A vetted list of reputable organizations, advocates, and data sources on drunk driving and road safety.
+
+## Services
+- [Web Design Services](${BASE_URL}/web-design-services.html): Custom, conversion-focused web design and development for small businesses. Flat pricing — 5-page site $500, 10-page $999, 20-page $1500. Fast, mobile-first, SEO-ready.
 `;
 writeFileSync(join(__dirname, 'llms.txt'), llms);
 
-const total = guides.length + seoArticles.length + 3;
+const total = guides.length + seoArticles.length + 4;
 console.log(
-  `✓ Built site: home + about + follow + ${guides.length} guides + ${seoArticles.length} articles = ${total} pages`
+  `✓ Built site: home + about + follow + services + ${guides.length} guides + ${seoArticles.length} articles = ${total} pages`
 );
 console.log(`✓ Wrote sitemap.xml (${urls.length} URLs) + robots.txt + llms.txt`);
