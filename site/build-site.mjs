@@ -150,6 +150,20 @@ footer{background:var(--navy-deep);color:#9fb4e0;text-align:center;padding:30px 
 footer a{color:#cdd9f2}
 .backlink{display:inline-block;font-family:var(--display);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--red);text-decoration:none;margin-bottom:24px}
 .backlink:hover{text-decoration:underline}
+/* daily ticker — copy/paste share boxes */
+.ticker-section{border-top:4px solid var(--red);padding-top:36px;margin-top:8px}
+.ticker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-top:8px}
+.ticker-card{background:#fff;border:1px solid var(--line);border-top:4px solid var(--red);border-radius:9px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:11px;box-shadow:0 1px 3px rgba(10,42,102,.06)}
+.ticker-card .tc-state{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);display:flex;align-items:center;gap:8px}
+.ticker-card .tc-sev{font-family:var(--display);font-weight:600;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--red);padding:3px 8px;border-radius:3px}
+.ticker-card .tc-share{font-family:var(--serif);font-size:15px;line-height:1.55;color:var(--ink);background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:12px}
+.ticker-card .tc-src{font-size:12px;color:var(--ink-mute)}
+.ticker-card .tc-src a{color:var(--navy)}
+.ticker-card .tc-copy{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;background:var(--navy);color:#fff;border:0;border-radius:6px;padding:11px 14px;cursor:pointer;transition:.15s}
+.ticker-card .tc-copy:hover{background:var(--red)}
+.ticker-card .tc-copy.copied{background:#1f8a4c}
+.ticker-loading{color:var(--ink-mute);font-style:italic}
+.ticker-foot{font-family:var(--display);font-size:13px;letter-spacing:.04em;color:var(--ink-mute);margin-top:16px}
 /* hero button + pulse */
 .btn-hero{display:inline-block;font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;background:var(--red);color:#fff;text-decoration:none;padding:13px 24px;border-radius:6px;transition:.18s}
 .btn-hero:hover{background:#fff;color:var(--navy)}
@@ -508,12 +522,47 @@ function renderHome() {
     </a>
   </div>
 
+  <div class="hub-section ticker-section" id="daily-ticker">
+    <h2>Today's Reports — Share the One Closest to You</h2>
+    <p class="lede">Every morning we scan local news across all 50 states for the most serious drunk-driving crashes. Find the box closest to your state, tap <strong>Copy</strong>, and paste it to your social media. Every one of these was preventable — and one share can change one decision tonight.</p>
+    <div class="ticker-grid" id="ticker-grid"><p class="ticker-loading">Gathering this morning's reports…</p></div>
+    <p class="ticker-foot">More states coming soon — and soon you'll be able to filter by your own state.</p>
+  </div>
+
   <div class="cta-band">
     <h2>Care for everyone. Get everyone home.</h2>
     <p>Our brand voice stays helpful as long as people are trying to do right. Plan the ride, hand over the keys, and share the message.</p>
     <span class="tag">${CAMPAIGN}</span>
   </div>
-</main>`;
+</main>
+<script>
+(function(){
+  var grid=document.getElementById('ticker-grid');
+  if(!grid)return;
+  function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  fetch('data/daily.json',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+    var boxes=(d&&d.boxes)||[];
+    if(!boxes.length){grid.innerHTML='<p class="ticker-loading">No reports loaded yet — check back tomorrow morning.</p>';return;}
+    grid.innerHTML=boxes.map(function(b){
+      return '<div class="ticker-card">'+
+        '<div class="tc-state"><span>'+esc(b.stateName||b.state)+'</span><span class="tc-sev">'+esc(b.severityLabel||'Report')+'</span></div>'+
+        '<div class="tc-share">'+esc(b.shareText)+'</div>'+
+        (b.sourceUrl?'<div class="tc-src">Source: <a href="'+esc(b.sourceUrl)+'" target="_blank" rel="noopener nofollow">'+esc(b.sourceOutlet||'Read the report')+'</a></div>':'')+
+        '<button class="tc-copy" type="button">Copy this message</button>'+
+      '</div>';
+    }).join('');
+    [].slice.call(grid.querySelectorAll('.ticker-card')).forEach(function(card,i){
+      var btn=card.querySelector('.tc-copy');
+      btn.addEventListener('click',function(){
+        var text=boxes[i].shareText||'';
+        var done=function(){btn.textContent='Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='Copy this message';btn.classList.remove('copied');},2000);};
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,done);}
+        else{var t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(t);done();}
+      });
+    });
+  }).catch(function(){grid.innerHTML='<p class="ticker-loading">Reports are refreshing — check back shortly.</p>';});
+})();
+</script>`;
 
   return page({
     title: 'Marketers Against Drunk Driving — Using Marketing for Good',

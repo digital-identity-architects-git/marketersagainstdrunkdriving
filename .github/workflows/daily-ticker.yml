@@ -1,0 +1,43 @@
+name: Daily Drunk-Driving Ticker
+
+# Runs every morning, pulls 50-state RSS, and commits the day's top-10 share
+# boxes to site/data/daily.json. Committing to main triggers the Cloudflare
+# Pages rebuild automatically. 10:00 UTC ≈ 5 AM US Eastern.
+on:
+  schedule:
+    - cron: '0 10 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-ticker
+  cancel-in-progress: false
+
+jobs:
+  build-ticker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate daily ticker
+        run: node scripts/daily-ticker.mjs
+
+      - name: Commit updated ticker
+        run: |
+          git config user.name "madd-ticker-bot"
+          git config user.email "actions@github.com"
+          if [ -n "$(git status --porcelain site/data/daily.json)" ]; then
+            git add site/data/daily.json
+            git commit -m "Update daily drunk-driving ticker ($(date -u +%Y-%m-%d))"
+            git push
+          else
+            echo "No ticker changes to commit."
+          fi
