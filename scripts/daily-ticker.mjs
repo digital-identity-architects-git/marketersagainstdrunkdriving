@@ -14,7 +14,9 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const OUT_DIR = join(__dirname, '..', 'site', 'data');
+// Output path is configurable so the same script works in the repo (writes to
+// site/data/daily.json) and on SiteGround (point TICKER_OUT_DIR at public_html/data).
+const OUT_DIR = process.env.TICKER_OUT_DIR || join(__dirname, '..', 'site', 'data');
 const OUT_FILE = join(OUT_DIR, 'daily.json');
 
 const CAMPAIGN_HASHTAG = '#marketersagainstdrunkdriving';
