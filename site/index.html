@@ -125,6 +125,46 @@ footer{background:var(--navy-deep);color:#9fb4e0;text-align:center;padding:30px 
 footer a{color:#cdd9f2}
 .backlink{display:inline-block;font-family:var(--display);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--red);text-decoration:none;margin-bottom:24px}
 .backlink:hover{text-decoration:underline}
+/* daily ticker — copy/paste share boxes */
+.ticker-section{border-top:4px solid var(--red);padding-top:36px;margin-top:8px}
+.ticker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-top:8px}
+.ticker-card{background:#fff;border:1px solid var(--line);border-top:4px solid var(--red);border-radius:9px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:11px;box-shadow:0 1px 3px rgba(10,42,102,.06)}
+.ticker-card .tc-state{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy);display:flex;align-items:center;gap:8px}
+.ticker-card .tc-sev{font-family:var(--display);font-weight:600;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--red);padding:3px 8px;border-radius:3px}
+.ticker-card .tc-share{font-family:var(--serif);font-size:15px;line-height:1.55;color:var(--ink);background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:12px}
+.ticker-card .tc-src{font-size:12px;color:var(--ink-mute)}
+.ticker-card .tc-src a{color:var(--navy)}
+.ticker-card .tc-copy{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;background:var(--navy);color:#fff;border:0;border-radius:6px;padding:11px 14px;cursor:pointer;transition:.15s}
+.ticker-card .tc-copy:hover{background:var(--red)}
+.ticker-card .tc-copy.copied{background:#1f8a4c}
+.ticker-loading{color:var(--ink-mute);font-style:italic}
+.ticker-foot{font-family:var(--display);font-size:13px;letter-spacing:.04em;color:var(--ink-mute);margin-top:16px}
+/* above-the-fold hero ticker — scroll-across row of spinnable share boxes */
+.hero-ticker{margin-top:26px}
+.hero-ticker .ht-intro{font-size:14px;line-height:1.5;color:#cdd9f2;margin-bottom:14px;max-width:780px}
+.hero-ticker .ht-intro strong{color:#fff}
+.ht-strip{display:flex;gap:13px;overflow-x:auto;padding:2px 2px 14px;scroll-snap-type:x proximity}
+.ht-strip::-webkit-scrollbar{height:8px}
+.ht-strip::-webkit-scrollbar-track{background:rgba(255,255,255,.08);border-radius:4px}
+.ht-strip::-webkit-scrollbar-thumb{background:rgba(255,255,255,.28);border-radius:4px}
+.ht-card{scroll-snap-align:start;flex:0 0 268px;background:#fff;border-radius:10px;border-top:4px solid var(--red);padding:12px 13px;display:flex;flex-direction:column;gap:9px;box-shadow:0 6px 18px rgba(0,0,0,.20)}
+.ht-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ht-id{display:flex;align-items:center;gap:7px;min-width:0}
+.ht-state{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--navy);white-space:nowrap}
+.ht-sev{font-family:var(--display);font-weight:600;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--red);padding:2px 6px;border-radius:3px;white-space:nowrap}
+.ht-copy{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.03em;text-transform:uppercase;background:var(--navy);color:#fff;border:0;border-radius:5px;padding:6px 11px;cursor:pointer;transition:.15s;white-space:nowrap}
+.ht-copy:hover{background:var(--red)}
+.ht-copy.copied{background:#1f8a4c}
+.ht-text{font-family:var(--serif);font-size:13.5px;line-height:1.5;color:var(--ink);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;min-height:82px}
+.ht-spin{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.03em;text-transform:uppercase;background:#e3edff;color:var(--navy);border:0;border-radius:5px;padding:8px 10px;cursor:pointer;transition:.15s}
+.ht-spin:hover{background:var(--red);color:#fff}
+.ht-share{display:flex;gap:6px}
+.ht-share a,.ht-share button{flex:1;display:flex;align-items:center;justify-content:center;height:30px;border-radius:5px;border:0;cursor:pointer;text-decoration:none;font-family:var(--display);font-weight:700;font-size:12px;color:#fff;transition:.15s}
+.ht-share .x{background:#000}.ht-share .fb{background:#1877f2}.ht-share .ig{background:#d6336c}.ht-share .li{background:#0a66c2}
+.ht-share a:hover,.ht-share button:hover{opacity:.85}
+.ht-src{font-size:10.5px;color:var(--ink-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ht-src a{color:var(--navy)}
+.ht-empty{color:#bcd0f5;font-style:italic;padding:10px 0}
 /* hero button + pulse */
 .btn-hero{display:inline-block;font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;background:var(--red);color:#fff;text-decoration:none;padding:13px 24px;border-radius:6px;transition:.18s}
 .btn-hero:hover{background:#fff;color:var(--navy)}
@@ -170,6 +210,11 @@ footer a{color:#cdd9f2}
 @media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}}
 </style></head>
 <body>
+<script>
+/* Shared spintax engine — resolves {a|b|c} groups (nested) into one fresh
+ * original variation. Used by share boxes and the front-page ticker. */
+window.MADDspin=function(t){var g=/{([^{}]*)}/,n=0;while(g.test(t)&&n++<2000){t=t.replace(g,function(_,b){var o=b.split('|');return o[Math.floor(Math.random()*o.length)];});}return t.replace(/s+/g,' ').trim();};
+</script>
 <div class="brand-bar"><div class="brand-inner">
   <a class="brand-mark" href="index.html">
     <span class="shield"><span>MADD</span></span>
@@ -189,12 +234,11 @@ footer a{color:#cdd9f2}
   <h1>Marketers Against <em>Drunk Driving</em></h1>
   <div class="subtitle">A brand built by a marketer who decided to point real reach at a problem that takes someone every 39 minutes.</div>
   <p class="hero-tag">We meet people where they are — whether they're trying to understand the law, choose an attorney, or simply get home safe tonight. The mission is simple: get the right message in front of the right people, and get everyone home. <span style="color:#fff;font-weight:600">#marketersagainstdrunkdriving</span></p>
-  <div class="meta-row">
-    <div class="meta-card"><div class="label">Guides</div><div class="value">3 Interactive</div></div>
-    <div class="meta-card"><div class="label">Articles</div><div class="value">9 Published</div></div>
-    <div class="meta-card"><div class="label">Mission</div><div class="value">Zero drunk driving</div></div>
+  <div class="hero-ticker" id="daily-ticker">
+    <p class="ht-intro">🚨 <strong>Today's drunk-driving reports from across the country.</strong> Find the one closest to your state, hit <strong>Spin</strong> for a fresh, original version, then <strong>Copy</strong> it or share it straight to social. Every share is a reminder that could change one decision tonight.</p>
+    <div class="ht-strip" id="ht-strip"><p class="ht-empty">Gathering this morning's reports…</p></div>
   </div>
-  <div style="margin-top:30px"><a class="btn-hero" href="about.html">Read how this started →</a></div>
+  <div style="margin-top:24px"><a class="btn-hero" href="about.html">Read how this started →</a></div>
 </div></header>
 <main class="wrap" style="max-width:1100px">
 
@@ -302,5 +346,58 @@ footer a{color:#cdd9f2}
     <span class="tag">#marketersagainstdrunkdriving</span>
   </div>
 </main>
+<script>
+(function(){
+  var strip=document.getElementById('ht-strip');
+  if(!strip)return;
+  var siteUrl=encodeURIComponent(location.origin+location.pathname.replace(/index\.html$/,''));
+  function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  fetch('data/daily.json',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+    var boxes=(d&&d.boxes)||[];
+    if(!boxes.length){strip.innerHTML='<p class="ht-empty">No reports loaded yet — check back tomorrow morning.</p>';return;}
+    strip.innerHTML=boxes.map(function(b){
+      var src=b.sourceUrl?'<div class="ht-src">Source: <a href="'+esc(b.sourceUrl)+'" target="_blank" rel="noopener nofollow">'+esc(b.sourceOutlet||'Read the report')+'</a></div>':'';
+      return '<div class="ht-card">'+
+        '<div class="ht-top"><div class="ht-id"><span class="ht-state">'+esc(b.stateName||b.state)+'</span><span class="ht-sev">'+esc(b.severityLabel||'Report')+'</span></div>'+
+          '<button class="ht-copy" type="button">Copy</button></div>'+
+        '<div class="ht-text"></div>'+
+        '<button class="ht-spin" type="button">🎲 Spin content</button>'+
+        '<div class="ht-share">'+
+          '<a class="x" target="_blank" rel="noopener" title="Share on X">X</a>'+
+          '<a class="fb" target="_blank" rel="noopener" title="Share on Facebook">f</a>'+
+          '<button class="ig" type="button" title="Copy for Instagram">IG</button>'+
+          '<a class="li" target="_blank" rel="noopener" title="Share on LinkedIn">in</a>'+
+        '</div>'+src+
+      '</div>';
+    }).join('');
+    [].slice.call(strip.querySelectorAll('.ht-card')).forEach(function(card,i){
+      var b=boxes[i];
+      var tpl=b.spintaxTemplate||b.shareText||'';
+      var txt=card.querySelector('.ht-text');
+      var x=card.querySelector('.x'),fb=card.querySelector('.fb'),li=card.querySelector('.li');
+      var copyBtn=card.querySelector('.ht-copy'),spinBtn=card.querySelector('.ht-spin'),igBtn=card.querySelector('.ig');
+      var current='';
+      function spinFn(t){return window.MADDspin?window.MADDspin(t):t;}
+      function copy(text,btn,label){
+        var done=function(){var o=btn.textContent;btn.textContent=label;btn.classList.add('copied');setTimeout(function(){btn.textContent=o;btn.classList.remove('copied');},1600);};
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,done);}
+        else{var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);done();}
+      }
+      function render(){
+        current=spinFn(tpl); txt.textContent=current;
+        var enc=encodeURIComponent(current);
+        if(x)x.href='https://twitter.com/intent/tweet?text='+enc+'&url='+siteUrl;
+        if(fb)fb.href='https://www.facebook.com/sharer/sharer.php?u='+siteUrl+'&quote='+enc;
+        if(li)li.href='https://www.linkedin.com/sharing/share-offsite/?url='+siteUrl;
+      }
+      render();
+      spinBtn.addEventListener('click',function(){render();spinBtn.textContent='🎲 Spun!';setTimeout(function(){spinBtn.textContent='🎲 Spin content';},1100);});
+      copyBtn.addEventListener('click',function(){copy(current,copyBtn,'Copied!');});
+      // Instagram has no web share-text URL, so copy the post and open Instagram to paste.
+      igBtn.addEventListener('click',function(){copy(current,igBtn,'Copied!');window.open('https://www.instagram.com/','_blank');});
+    });
+  }).catch(function(){strip.innerHTML='<p class="ht-empty">Reports are refreshing — check back shortly.</p>';});
+})();
+</script>
 <footer>© 2026 Marketers Against Drunk Driving · Using marketing for good · <span style="color:#c8102e;font-weight:600">#marketersagainstdrunkdriving</span><br>Educational content only — not legal advice.</footer>
 </body></html>
