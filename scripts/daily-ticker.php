@@ -19,7 +19,8 @@
 // folder. You can find the absolute path in SiteGround Site Tools → File
 // Manager (it looks like /home/customer/www/yourdomain.com/public_html).
 $OUT_FILE = getenv('TICKER_OUT_FILE')
-    ?: (__DIR__ . '/data/daily.json'); // default: a data/ folder next to this script
+    ?: (dirname(__DIR__) . '/data/daily.json'); // default: ../data next to the script
+                                                // (so public_html/private/ -> public_html/data/daily.json)
 
 $CAMPAIGN_HASHTAG = '#marketersagainstdrunkdriving';
 
