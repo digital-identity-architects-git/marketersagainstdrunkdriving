@@ -139,6 +139,32 @@ footer a{color:#cdd9f2}
 .ticker-card .tc-copy.copied{background:#1f8a4c}
 .ticker-loading{color:var(--ink-mute);font-style:italic}
 .ticker-foot{font-family:var(--display);font-size:13px;letter-spacing:.04em;color:var(--ink-mute);margin-top:16px}
+/* above-the-fold hero ticker — scroll-across row of spinnable share boxes */
+.hero-ticker{margin-top:26px}
+.hero-ticker .ht-intro{font-size:14px;line-height:1.5;color:#cdd9f2;margin-bottom:14px;max-width:780px}
+.hero-ticker .ht-intro strong{color:#fff}
+.ht-strip{display:flex;gap:13px;overflow-x:auto;padding:2px 2px 14px;scroll-snap-type:x proximity}
+.ht-strip::-webkit-scrollbar{height:8px}
+.ht-strip::-webkit-scrollbar-track{background:rgba(255,255,255,.08);border-radius:4px}
+.ht-strip::-webkit-scrollbar-thumb{background:rgba(255,255,255,.28);border-radius:4px}
+.ht-card{scroll-snap-align:start;flex:0 0 268px;background:#fff;border-radius:10px;border-top:4px solid var(--red);padding:12px 13px;display:flex;flex-direction:column;gap:9px;box-shadow:0 6px 18px rgba(0,0,0,.20)}
+.ht-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ht-id{display:flex;align-items:center;gap:7px;min-width:0}
+.ht-state{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--navy);white-space:nowrap}
+.ht-sev{font-family:var(--display);font-weight:600;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--red);padding:2px 6px;border-radius:3px;white-space:nowrap}
+.ht-copy{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.03em;text-transform:uppercase;background:var(--navy);color:#fff;border:0;border-radius:5px;padding:6px 11px;cursor:pointer;transition:.15s;white-space:nowrap}
+.ht-copy:hover{background:var(--red)}
+.ht-copy.copied{background:#1f8a4c}
+.ht-text{font-family:var(--serif);font-size:13.5px;line-height:1.5;color:var(--ink);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;min-height:82px}
+.ht-spin{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.03em;text-transform:uppercase;background:#e3edff;color:var(--navy);border:0;border-radius:5px;padding:8px 10px;cursor:pointer;transition:.15s}
+.ht-spin:hover{background:var(--red);color:#fff}
+.ht-share{display:flex;gap:6px}
+.ht-share a,.ht-share button{flex:1;display:flex;align-items:center;justify-content:center;height:30px;border-radius:5px;border:0;cursor:pointer;text-decoration:none;font-family:var(--display);font-weight:700;font-size:12px;color:#fff;transition:.15s}
+.ht-share .x{background:#000}.ht-share .fb{background:#1877f2}.ht-share .ig{background:#d6336c}.ht-share .li{background:#0a66c2}
+.ht-share a:hover,.ht-share button:hover{opacity:.85}
+.ht-src{font-size:10.5px;color:var(--ink-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ht-src a{color:var(--navy)}
+.ht-empty{color:#bcd0f5;font-style:italic;padding:10px 0}
 /* hero button + pulse */
 .btn-hero{display:inline-block;font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;background:var(--red);color:#fff;text-decoration:none;padding:13px 24px;border-radius:6px;transition:.18s}
 .btn-hero:hover{background:#fff;color:var(--navy)}
@@ -184,6 +210,11 @@ footer a{color:#cdd9f2}
 @media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}}
 </style></head>
 <body>
+<script>
+/* Shared spintax engine — resolves {a|b|c} groups (nested) into one fresh
+ * original variation. Used by share boxes and the front-page ticker. */
+window.MADDspin=function(t){var g=/{([^{}]*)}/,n=0;while(g.test(t)&&n++<2000){t=t.replace(g,function(_,b){var o=b.split('|');return o[Math.floor(Math.random()*o.length)];});}return t.replace(/s+/g,' ').trim();};
+</script>
 <div class="brand-bar"><div class="brand-inner">
   <a class="brand-mark" href="index.html">
     <span class="shield"><span>MADD</span></span>

@@ -164,6 +164,32 @@ footer a{color:#cdd9f2}
 .ticker-card .tc-copy.copied{background:#1f8a4c}
 .ticker-loading{color:var(--ink-mute);font-style:italic}
 .ticker-foot{font-family:var(--display);font-size:13px;letter-spacing:.04em;color:var(--ink-mute);margin-top:16px}
+/* above-the-fold hero ticker — scroll-across row of spinnable share boxes */
+.hero-ticker{margin-top:26px}
+.hero-ticker .ht-intro{font-size:14px;line-height:1.5;color:#cdd9f2;margin-bottom:14px;max-width:780px}
+.hero-ticker .ht-intro strong{color:#fff}
+.ht-strip{display:flex;gap:13px;overflow-x:auto;padding:2px 2px 14px;scroll-snap-type:x proximity}
+.ht-strip::-webkit-scrollbar{height:8px}
+.ht-strip::-webkit-scrollbar-track{background:rgba(255,255,255,.08);border-radius:4px}
+.ht-strip::-webkit-scrollbar-thumb{background:rgba(255,255,255,.28);border-radius:4px}
+.ht-card{scroll-snap-align:start;flex:0 0 268px;background:#fff;border-radius:10px;border-top:4px solid var(--red);padding:12px 13px;display:flex;flex-direction:column;gap:9px;box-shadow:0 6px 18px rgba(0,0,0,.20)}
+.ht-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.ht-id{display:flex;align-items:center;gap:7px;min-width:0}
+.ht-state{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--navy);white-space:nowrap}
+.ht-sev{font-family:var(--display);font-weight:600;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--red);padding:2px 6px;border-radius:3px;white-space:nowrap}
+.ht-copy{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.03em;text-transform:uppercase;background:var(--navy);color:#fff;border:0;border-radius:5px;padding:6px 11px;cursor:pointer;transition:.15s;white-space:nowrap}
+.ht-copy:hover{background:var(--red)}
+.ht-copy.copied{background:#1f8a4c}
+.ht-text{font-family:var(--serif);font-size:13.5px;line-height:1.5;color:var(--ink);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;min-height:82px}
+.ht-spin{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.03em;text-transform:uppercase;background:#e3edff;color:var(--navy);border:0;border-radius:5px;padding:8px 10px;cursor:pointer;transition:.15s}
+.ht-spin:hover{background:var(--red);color:#fff}
+.ht-share{display:flex;gap:6px}
+.ht-share a,.ht-share button{flex:1;display:flex;align-items:center;justify-content:center;height:30px;border-radius:5px;border:0;cursor:pointer;text-decoration:none;font-family:var(--display);font-weight:700;font-size:12px;color:#fff;transition:.15s}
+.ht-share .x{background:#000}.ht-share .fb{background:#1877f2}.ht-share .ig{background:#d6336c}.ht-share .li{background:#0a66c2}
+.ht-share a:hover,.ht-share button:hover{opacity:.85}
+.ht-src{font-size:10.5px;color:var(--ink-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ht-src a{color:var(--navy)}
+.ht-empty{color:#bcd0f5;font-style:italic;padding:10px 0}
 /* hero button + pulse */
 .btn-hero{display:inline-block;font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;background:var(--red);color:#fff;text-decoration:none;padding:13px 24px;border-radius:6px;transition:.18s}
 .btn-hero:hover{background:#fff;color:var(--navy)}
@@ -223,28 +249,31 @@ const esc = (s) =>
  */
 function shareBox(title, keyword, type = 'article') {
   const noun = type === 'guide' ? 'guide' : 'read';
+  // Spintax templates — each {a|b|c} group lets visitors spin a fresh, original
+  // variation to repurpose, so no two shared posts read the same.
   const snippets = [
     {
-      text: `⚠️ ${title} — the clear, no-nonsense breakdown. Read it, then send it to someone who needs it. 👇`,
-      tags: ['#DriveSober', '#DUIAwareness', CAMPAIGN],
+      text: `{⚠️|🚨|❗} ${title} — {the clear, no-nonsense breakdown|the facts in plain English|exactly what you need to know}. {Read it, then send it to someone who needs it.|Share it with someone who should see this.|Pass it to a friend who drives.} 👇`,
+      tags: ['{#DriveSober|#SoberDriving}', '{#DUIAwareness|#StopDUI}', CAMPAIGN],
     },
     {
-      text: `Not sure about ${keyword}? Most people aren't. We laid out the facts in plain English — because knowing keeps people safe. 🚗`,
-      tags: ['#RoadSafety', '#KnowYourRights', CAMPAIGN],
+      text: `{Not sure about|Fuzzy on|Ever wondered about} ${keyword}? {Most people aren't sure.|You're not alone.|Few people really know.} {We laid out the facts in plain English|We broke it down simply|We made it easy to understand} — {because knowing keeps people safe|because awareness saves lives|so you can help someone}. 🚗`,
+      tags: ['{#RoadSafety|#SafeRoads}', '{#KnowYourRights|#DriveSafe}', CAMPAIGN],
     },
     {
-      text: `${title}: a 2-minute ${noun} that could change a decision tonight. Plan the ride, know the facts, get everyone home. 🔗`,
-      tags: ['#DontDrinkAndDrive', '#ArriveAlive', CAMPAIGN],
+      text: `${title}: {a 2-minute ${noun}|a quick ${noun}|a short ${noun}} that {could change a decision tonight|might save a life|someone needs today}. {Plan the ride, know the facts, get everyone home.|Hand over the keys. Get everyone home.|Share it — it travels.} 🔗`,
+      tags: ['{#DontDrinkAndDrive|#BuzzedDrivingIsDrunkDriving}', '{#ArriveAlive|#PlanAheadForYourRide}', CAMPAIGN],
     },
   ];
 
   const rows = snippets
     .map((s) => {
-      const full = `${s.text} ${s.tags.join(' ')}`;
-      return `<div class="snippet" data-text="${esc(full)}">
-      <p class="snippet-text">${esc(full)}</p>
+      const tpl = `${s.text} ${s.tags.join(' ')}`;
+      return `<div class="snippet" data-tpl="${esc(tpl)}">
+      <p class="snippet-text"></p>
       <div class="snippet-actions">
         <button class="snip-btn copy">Copy</button>
+        <button class="snip-btn spin">🎲 Spin new version</button>
         <a class="snip-btn x" target="_blank" rel="noopener">Post to X</a>
         <a class="snip-btn fb" target="_blank" rel="noopener">Facebook</a>
         <a class="snip-btn li" target="_blank" rel="noopener">LinkedIn</a>
@@ -264,12 +293,22 @@ function shareBox(title, keyword, type = 'article') {
 (function(){
   var url=encodeURIComponent(location.href);
   document.querySelectorAll('.snippet').forEach(function(s){
-    var text=s.getAttribute('data-text'), enc=encodeURIComponent(text);
-    var x=s.querySelector('.x'); if(x)x.href='https://twitter.com/intent/tweet?text='+enc+'&url='+url;
-    var fb=s.querySelector('.fb'); if(fb)fb.href='https://www.facebook.com/sharer/sharer.php?u='+url+'&quote='+enc;
-    var li=s.querySelector('.li'); if(li)li.href='https://www.linkedin.com/sharing/share-offsite/?url='+url;
-    var c=s.querySelector('.copy'); if(c)c.addEventListener('click',function(){
-      navigator.clipboard.writeText(text+' '+location.href).then(function(){
+    var tpl=s.getAttribute('data-tpl');
+    var p=s.querySelector('.snippet-text');
+    var x=s.querySelector('.x'), fb=s.querySelector('.fb'), li=s.querySelector('.li');
+    var c=s.querySelector('.copy'), sp=s.querySelector('.spin');
+    var current='';
+    function render(){
+      current=window.MADDspin(tpl); p.textContent=current;
+      var enc=encodeURIComponent(current);
+      if(x)x.href='https://twitter.com/intent/tweet?text='+enc+'&url='+url;
+      if(fb)fb.href='https://www.facebook.com/sharer/sharer.php?u='+url+'&quote='+enc;
+      if(li)li.href='https://www.linkedin.com/sharing/share-offsite/?url='+url;
+    }
+    render();
+    if(sp)sp.addEventListener('click',function(){render();sp.textContent='🎲 Spun!';setTimeout(function(){sp.textContent='🎲 Spin new version';},1200);});
+    if(c)c.addEventListener('click',function(){
+      navigator.clipboard.writeText(current+' '+location.href).then(function(){
         c.textContent='Copied!';setTimeout(function(){c.textContent='Copy';},1500);
       });
     });
@@ -305,6 +344,11 @@ ${FONTS}
 ${schema ? `<script type="application/ld+json">${JSON.stringify(schema)}</script>` : ''}
 <style>${CSS}</style></head>
 <body>
+<script>
+/* Shared spintax engine — resolves {a|b|c} groups (nested) into one fresh
+ * original variation. Used by share boxes and the front-page ticker. */
+window.MADDspin=function(t){var g=/\{([^{}]*)\}/,n=0;while(g.test(t)&&n++<2000){t=t.replace(g,function(_,b){var o=b.split('|');return o[Math.floor(Math.random()*o.length)];});}return t.replace(/\s+/g,' ').trim();};
+</script>
 ${brandBar(current, prefix)}
 ${body}
 <footer>© ${new Date().getFullYear()} Marketers Against Drunk Driving · Using marketing for good · <span style="color:#c8102e;font-weight:600">${CAMPAIGN}</span><br>Educational content only — not legal advice.</footer>
@@ -485,12 +529,11 @@ function renderHome() {
   <h1>Marketers Against <em>Drunk Driving</em></h1>
   <div class="subtitle">A brand built by a marketer who decided to point real reach at a problem that takes someone every 39 minutes.</div>
   <p class="hero-tag">We meet people where they are — whether they're trying to understand the law, choose an attorney, or simply get home safe tonight. The mission is simple: get the right message in front of the right people, and get everyone home. <span style="color:#fff;font-weight:600">${CAMPAIGN}</span></p>
-  <div class="meta-row">
-    <div class="meta-card"><div class="label">Guides</div><div class="value">${guides.length} Interactive</div></div>
-    <div class="meta-card"><div class="label">Articles</div><div class="value">${seoArticles.length} Published</div></div>
-    <div class="meta-card"><div class="label">Mission</div><div class="value">Zero drunk driving</div></div>
+  <div class="hero-ticker" id="daily-ticker">
+    <p class="ht-intro">🚨 <strong>Today's drunk-driving reports from across the country.</strong> Find the one closest to your state, hit <strong>Spin</strong> for a fresh, original version, then <strong>Copy</strong> it or share it straight to social. Every share is a reminder that could change one decision tonight.</p>
+    <div class="ht-strip" id="ht-strip"><p class="ht-empty">Gathering this morning's reports…</p></div>
   </div>
-  <div style="margin-top:30px"><a class="btn-hero" href="about.html">Read how this started →</a></div>
+  <div style="margin-top:24px"><a class="btn-hero" href="about.html">Read how this started →</a></div>
 </div></header>
 <main class="wrap" style="max-width:1100px">
 
@@ -522,13 +565,6 @@ function renderHome() {
     </a>
   </div>
 
-  <div class="hub-section ticker-section" id="daily-ticker">
-    <h2>Today's Reports — Share the One Closest to You</h2>
-    <p class="lede">Every morning we scan local news across all 50 states for the most serious drunk-driving crashes. Find the box closest to your state, tap <strong>Copy</strong>, and paste it to your social media. Every one of these was preventable — and one share can change one decision tonight.</p>
-    <div class="ticker-grid" id="ticker-grid"><p class="ticker-loading">Gathering this morning's reports…</p></div>
-    <p class="ticker-foot">More states coming soon — and soon you'll be able to filter by your own state.</p>
-  </div>
-
   <div class="cta-band">
     <h2>Care for everyone. Get everyone home.</h2>
     <p>Our brand voice stays helpful as long as people are trying to do right. Plan the ride, hand over the keys, and share the message.</p>
@@ -537,30 +573,55 @@ function renderHome() {
 </main>
 <script>
 (function(){
-  var grid=document.getElementById('ticker-grid');
-  if(!grid)return;
+  var strip=document.getElementById('ht-strip');
+  if(!strip)return;
+  var siteUrl=encodeURIComponent(location.origin+location.pathname.replace(/index\\.html$/,''));
   function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   fetch('data/daily.json',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
     var boxes=(d&&d.boxes)||[];
-    if(!boxes.length){grid.innerHTML='<p class="ticker-loading">No reports loaded yet — check back tomorrow morning.</p>';return;}
-    grid.innerHTML=boxes.map(function(b){
-      return '<div class="ticker-card">'+
-        '<div class="tc-state"><span>'+esc(b.stateName||b.state)+'</span><span class="tc-sev">'+esc(b.severityLabel||'Report')+'</span></div>'+
-        '<div class="tc-share">'+esc(b.shareText)+'</div>'+
-        (b.sourceUrl?'<div class="tc-src">Source: <a href="'+esc(b.sourceUrl)+'" target="_blank" rel="noopener nofollow">'+esc(b.sourceOutlet||'Read the report')+'</a></div>':'')+
-        '<button class="tc-copy" type="button">Copy this message</button>'+
+    if(!boxes.length){strip.innerHTML='<p class="ht-empty">No reports loaded yet — check back tomorrow morning.</p>';return;}
+    strip.innerHTML=boxes.map(function(b){
+      var src=b.sourceUrl?'<div class="ht-src">Source: <a href="'+esc(b.sourceUrl)+'" target="_blank" rel="noopener nofollow">'+esc(b.sourceOutlet||'Read the report')+'</a></div>':'';
+      return '<div class="ht-card">'+
+        '<div class="ht-top"><div class="ht-id"><span class="ht-state">'+esc(b.stateName||b.state)+'</span><span class="ht-sev">'+esc(b.severityLabel||'Report')+'</span></div>'+
+          '<button class="ht-copy" type="button">Copy</button></div>'+
+        '<div class="ht-text"></div>'+
+        '<button class="ht-spin" type="button">🎲 Spin content</button>'+
+        '<div class="ht-share">'+
+          '<a class="x" target="_blank" rel="noopener" title="Share on X">X</a>'+
+          '<a class="fb" target="_blank" rel="noopener" title="Share on Facebook">f</a>'+
+          '<button class="ig" type="button" title="Copy for Instagram">IG</button>'+
+          '<a class="li" target="_blank" rel="noopener" title="Share on LinkedIn">in</a>'+
+        '</div>'+src+
       '</div>';
     }).join('');
-    [].slice.call(grid.querySelectorAll('.ticker-card')).forEach(function(card,i){
-      var btn=card.querySelector('.tc-copy');
-      btn.addEventListener('click',function(){
-        var text=boxes[i].shareText||'';
-        var done=function(){btn.textContent='Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='Copy this message';btn.classList.remove('copied');},2000);};
+    [].slice.call(strip.querySelectorAll('.ht-card')).forEach(function(card,i){
+      var b=boxes[i];
+      var tpl=b.spintaxTemplate||b.shareText||'';
+      var txt=card.querySelector('.ht-text');
+      var x=card.querySelector('.x'),fb=card.querySelector('.fb'),li=card.querySelector('.li');
+      var copyBtn=card.querySelector('.ht-copy'),spinBtn=card.querySelector('.ht-spin'),igBtn=card.querySelector('.ig');
+      var current='';
+      function spinFn(t){return window.MADDspin?window.MADDspin(t):t;}
+      function copy(text,btn,label){
+        var done=function(){var o=btn.textContent;btn.textContent=label;btn.classList.add('copied');setTimeout(function(){btn.textContent=o;btn.classList.remove('copied');},1600);};
         if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,done);}
-        else{var t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(t);done();}
-      });
+        else{var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);done();}
+      }
+      function render(){
+        current=spinFn(tpl); txt.textContent=current;
+        var enc=encodeURIComponent(current);
+        if(x)x.href='https://twitter.com/intent/tweet?text='+enc+'&url='+siteUrl;
+        if(fb)fb.href='https://www.facebook.com/sharer/sharer.php?u='+siteUrl+'&quote='+enc;
+        if(li)li.href='https://www.linkedin.com/sharing/share-offsite/?url='+siteUrl;
+      }
+      render();
+      spinBtn.addEventListener('click',function(){render();spinBtn.textContent='🎲 Spun!';setTimeout(function(){spinBtn.textContent='🎲 Spin content';},1100);});
+      copyBtn.addEventListener('click',function(){copy(current,copyBtn,'Copied!');});
+      // Instagram has no web share-text URL, so copy the post and open Instagram to paste.
+      igBtn.addEventListener('click',function(){copy(current,igBtn,'Copied!');window.open('https://www.instagram.com/','_blank');});
     });
-  }).catch(function(){grid.innerHTML='<p class="ticker-loading">Reports are refreshing — check back shortly.</p>';});
+  }).catch(function(){strip.innerHTML='<p class="ht-empty">Reports are refreshing — check back shortly.</p>';});
 })();
 </script>`;
 

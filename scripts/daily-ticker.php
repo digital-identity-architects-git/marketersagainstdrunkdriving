@@ -157,7 +157,9 @@ function classify($item) {
     return $item;
 }
 
-function share_text($name, $incident, $hashtag) {
+// Returns the un-spun spintax template ({a|b|c} groups intact) so the website
+// can spin a fresh original variation in the browser on demand.
+function share_template($name, $incident, $hashtag) {
     $intro = '{A drunk driving crash|An impaired-driving crash|A DUI crash|A drunk driver}';
     $when  = '{this week|in recent days|days ago}';
     if ($incident['deaths'] >= 2) {
@@ -170,7 +172,7 @@ function share_text($name, $incident, $hashtag) {
     $truth = '{It was 100% preventable.|None of this had to happen.|This was preventable.}';
     $cta   = '{Plan a sober ride.|Hand over the keys.|Call a ride tonight.|Be the reason someone gets home.}';
     $tail  = '{Share this so the next one doesn\'t happen.|Pass it on.|Let it travel.}';
-    return spin("$intro in $name $when $outcome. $truth $cta $tail $hashtag");
+    return "$intro in $name $when $outcome. $truth $cta $tail $hashtag";
 }
 
 // --- main -------------------------------------------------------------------
@@ -203,17 +205,19 @@ $top = array_slice($found, 0, 10);
 $boxes = [];
 foreach ($top as $f) {
     $inc = $f['incident'];
+    $tpl = share_template($f['name'], $inc, $CAMPAIGN_HASHTAG);
     $boxes[] = [
-        'state'         => $f['code'],
-        'stateName'     => $f['name'],
-        'city'          => $f['city'],
-        'severity'      => $inc['severity'],
-        'severityLabel' => $inc['severityLabel'],
-        'deaths'        => $inc['deaths'],
-        'headline'      => $inc['title'],
-        'sourceUrl'     => $inc['link'],
-        'sourceOutlet'  => $inc['outlet'],
-        'shareText'     => share_text($f['name'], $inc, $CAMPAIGN_HASHTAG),
+        'state'           => $f['code'],
+        'stateName'       => $f['name'],
+        'city'            => $f['city'],
+        'severity'        => $inc['severity'],
+        'severityLabel'   => $inc['severityLabel'],
+        'deaths'          => $inc['deaths'],
+        'headline'        => $inc['title'],
+        'sourceUrl'       => $inc['link'],
+        'sourceOutlet'    => $inc['outlet'],
+        'spintaxTemplate' => $tpl,
+        'shareText'       => spin($tpl),
     ];
 }
 

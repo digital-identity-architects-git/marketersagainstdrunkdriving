@@ -188,7 +188,9 @@ function classify(item) {
 }
 
 /* ------------------------------ share text ----------------------------- */
-function shareText(state, incident) {
+// Returns the un-spun spintax template ({a|b|c} groups intact) so the website
+// can spin a fresh original variation in the browser on demand.
+function shareTemplate(state, incident) {
   const intro = '{A drunk driving crash|An impaired-driving crash|A DUI crash|A drunk driver}';
   const place = `in ${state.name}`;
   const when = '{this week|in recent days|days ago}';
@@ -200,8 +202,7 @@ function shareText(state, incident) {
   const truth = '{It was 100% preventable.|None of this had to happen.|Not one bit of it was an accident of fate.|This was preventable.}';
   const cta = '{Plan a sober ride.|Hand over the keys.|Call a ride tonight.|Be the reason someone gets home.}';
   const tail = '{Share this so the next one doesn’t happen.|Pass it on.|Let it travel.}';
-  const template = `${intro} ${place} ${when} ${outcome}. ${truth} ${cta} ${tail} ${CAMPAIGN_HASHTAG}`;
-  return spin(template);
+  return `${intro} ${place} ${when} ${outcome}. ${truth} ${cta} ${tail} ${CAMPAIGN_HASHTAG}`;
 }
 
 /* -------------------------------- main --------------------------------- */
@@ -228,18 +229,22 @@ async function run() {
   found.sort((a, b) => a.incident.rank - b.incident.rank || b.incident.deaths - a.incident.deaths);
   const top = found.slice(0, 10);
 
-  const boxes = top.map(({ state, incident }) => ({
-    state: state.code,
-    stateName: state.name,
-    city: state.city,
-    severity: incident.severity,
-    severityLabel: incident.severityLabel,
-    deaths: incident.deaths,
-    headline: incident.title,
-    sourceUrl: incident.link,
-    sourceOutlet: incident.outlet,
-    shareText: shareText(state, incident),
-  }));
+  const boxes = top.map(({ state, incident }) => {
+    const spintaxTemplate = shareTemplate(state, incident);
+    return {
+      state: state.code,
+      stateName: state.name,
+      city: state.city,
+      severity: incident.severity,
+      severityLabel: incident.severityLabel,
+      deaths: incident.deaths,
+      headline: incident.title,
+      sourceUrl: incident.link,
+      sourceOutlet: incident.outlet,
+      spintaxTemplate,
+      shareText: spin(spintaxTemplate),
+    };
+  });
 
   const payload = {
     generatedAt: new Date().toISOString(),
