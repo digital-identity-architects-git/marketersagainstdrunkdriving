@@ -167,7 +167,33 @@ footer a{color:#cdd9f2}
 .snip-btn.li{background:#0a66c2;color:#fff}
 .snip-btn.x:hover,.snip-btn.fb:hover,.snip-btn.li:hover{opacity:.85}
 
-@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}}
+/* amplify tool */
+.tool{background:#fff;border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:14px;padding:30px 32px;box-shadow:0 4px 18px rgba(10,42,102,.07)}
+.tool-controls{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:26px}
+.field label{display:block;font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:8px}
+.field select{width:100%;font-family:var(--serif);font-size:17px;color:var(--ink);background-color:var(--cream);border:2px solid var(--line);border-radius:9px;padding:13px 42px 13px 14px;cursor:pointer;transition:.15s;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%230a2a66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>');background-repeat:no-repeat;background-position:right 14px center}
+.field select:focus{outline:none;border-color:var(--navy)}
+.out-block{margin-bottom:20px}
+.out-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px}
+.out-head h4{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy)}
+.out-box{width:100%;font-family:var(--serif);font-size:17px;line-height:1.6;color:var(--ink);background:var(--cream);border:2px solid var(--line);border-radius:10px;padding:16px;resize:vertical;min-height:118px;display:block}
+.out-box:focus{outline:none;border-color:var(--navy)}
+.hash-box{min-height:60px;color:var(--navy);font-weight:500}
+.char-count{font-family:var(--display);font-size:12px;letter-spacing:.06em;color:var(--ink-mute);white-space:nowrap}
+.char-count.over{color:var(--red);font-weight:700}
+.tool-actions{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 6px}
+.t-btn{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;border:none;cursor:pointer;padding:12px 18px;border-radius:8px;transition:.15s;display:inline-flex;align-items:center;gap:7px}
+.t-btn.spin{background:var(--red);color:#fff}
+.t-btn.spin:hover{background:var(--red-deep)}
+.t-btn.copy{background:var(--navy);color:#fff}
+.t-btn.copy:hover{background:var(--navy-deep)}
+.t-btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--line)}
+.t-btn.ghost:hover{border-color:var(--navy)}
+.t-btn.copied{background:#2e7d32 !important;color:#fff}
+.share-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.share-row .lbl{font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);margin-right:2px}
+.tool-note{font-size:13px;color:var(--ink-mute);margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}.tool-controls{grid-template-columns:1fr}.tool{padding:22px 18px}}
 </style></head>
 <body>
 <div class="brand-bar"><div class="brand-inner">
@@ -178,6 +204,7 @@ footer a{color:#cdd9f2}
   <nav class="brand-nav">
     <a href="index.html">Home</a>
     <a href="about.html">About</a>
+    <a href="amplify.html">Amplify</a>
     <a href="index.html#guides">Guides</a>
     <a href="index.html#articles">Articles</a>
     <a href="best-drunk-driving-sites-to-follow.html" class="current">Follow</a>

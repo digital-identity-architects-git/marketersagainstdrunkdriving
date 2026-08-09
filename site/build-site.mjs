@@ -192,7 +192,33 @@ footer a{color:#cdd9f2}
 .snip-btn.li{background:#0a66c2;color:#fff}
 .snip-btn.x:hover,.snip-btn.fb:hover,.snip-btn.li:hover{opacity:.85}
 
-@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}}
+/* amplify tool */
+.tool{background:#fff;border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:14px;padding:30px 32px;box-shadow:0 4px 18px rgba(10,42,102,.07)}
+.tool-controls{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:26px}
+.field label{display:block;font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:8px}
+.field select{width:100%;font-family:var(--serif);font-size:17px;color:var(--ink);background-color:var(--cream);border:2px solid var(--line);border-radius:9px;padding:13px 42px 13px 14px;cursor:pointer;transition:.15s;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%230a2a66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>');background-repeat:no-repeat;background-position:right 14px center}
+.field select:focus{outline:none;border-color:var(--navy)}
+.out-block{margin-bottom:20px}
+.out-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px}
+.out-head h4{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy)}
+.out-box{width:100%;font-family:var(--serif);font-size:17px;line-height:1.6;color:var(--ink);background:var(--cream);border:2px solid var(--line);border-radius:10px;padding:16px;resize:vertical;min-height:118px;display:block}
+.out-box:focus{outline:none;border-color:var(--navy)}
+.hash-box{min-height:60px;color:var(--navy);font-weight:500}
+.char-count{font-family:var(--display);font-size:12px;letter-spacing:.06em;color:var(--ink-mute);white-space:nowrap}
+.char-count.over{color:var(--red);font-weight:700}
+.tool-actions{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 6px}
+.t-btn{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;border:none;cursor:pointer;padding:12px 18px;border-radius:8px;transition:.15s;display:inline-flex;align-items:center;gap:7px}
+.t-btn.spin{background:var(--red);color:#fff}
+.t-btn.spin:hover{background:var(--red-deep)}
+.t-btn.copy{background:var(--navy);color:#fff}
+.t-btn.copy:hover{background:var(--navy-deep)}
+.t-btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--line)}
+.t-btn.ghost:hover{border-color:var(--navy)}
+.t-btn.copied{background:#2e7d32 !important;color:#fff}
+.share-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.share-row .lbl{font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);margin-right:2px}
+.tool-note{font-size:13px;color:var(--ink-mute);margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+@media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}.tool-controls{grid-template-columns:1fr}.tool{padding:22px 18px}}
 `;
 
 const esc = (s) =>
@@ -275,6 +301,7 @@ function brandBar(current, prefix = '') {
   <nav class="brand-nav">
     ${link('index.html', 'Home', 'home')}
     ${link('about.html', 'About', 'about')}
+    ${link('amplify.html', 'Amplify', 'amplify')}
     ${link('index.html#guides', 'Guides', 'guides')}
     ${link('index.html#articles', 'Articles', 'articles')}
     ${link('best-drunk-driving-sites-to-follow.html', 'Follow', 'follow')}
@@ -485,6 +512,17 @@ function renderHome() {
     <p class="lede">I'm an SEO and brand builder. I know how to make a message travel. After a wrong turn of my own, I decided the most responsible thing I could do with that skill was aim it at drunk driving — prevention, education, and getting people the help they need before anyone gets hurt. <a href="about.html">Here's the full story →</a></p>
   </div>
 
+  <div class="hub-section" id="amplify">
+    <h2>Post in 10 Seconds: The Amplify Tool</h2>
+    <p class="lede">Care enough to say something, but never sure what to write? Pick your state and your platform and get a finished, copy-and-paste awareness post with the right hashtags — spun fresh every time so it's never duplicate content.</p>
+    <a class="card" href="amplify.html" style="max-width:460px;border-top-color:var(--red)">
+      <div class="kicker">Free Tool</div>
+      <h3>Amplify — Ready-to-Post DUI Awareness Copy</h3>
+      <p>Choose a state + platform → copy → paste → post. Native hashtags per network, fresh wording on every spin.</p>
+      <div class="meta">50 states + DC · 5 platforms · No sign-up</div>
+    </a>
+  </div>
+
   <div class="hub-section" id="guides">
     <h2>Start Here: Interactive Guides</h2>
     <p class="lede">Work through these like mini-courses. Tick off each action item as you go — your progress saves automatically.</p>
@@ -612,6 +650,230 @@ const bestSites = [
   ['Your State Highway Safety Office', 'https://www.ghsa.org/about/shsos', 'Every state has one. Follow yours for local laws, checkpoints, grants, and campaigns where you actually drive.', 'Local / State'],
 ];
 
+/* ---------------------------- AMPLIFY (post generator tool) ---------------------------- */
+const AMPLIFY_DATA = {
+  states: [
+    'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware',
+    'District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa',
+    'Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota',
+    'Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey',
+    'New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon',
+    'Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah',
+    'Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming',
+  ],
+  // Per-platform tone: how many hashtags feel native, a soft character budget,
+  // and an optional spintax "lead" so posts read the way each network reads.
+  platforms: {
+    x:         { name: 'X (Twitter)', hashtags: 2, limit: 280,  lead: '' },
+    instagram: { name: 'Instagram',   hashtags: 5, limit: 2200, lead: '{📢 |🚗💙 |🙌 }' },
+    facebook:  { name: 'Facebook',    hashtags: 2, limit: 2000, lead: '' },
+    tiktok:    { name: 'TikTok',      hashtags: 3, limit: 2200, lead: '{👀 |🚦 |💯 }' },
+    linkedin:  { name: 'LinkedIn',    hashtags: 2, limit: 3000, lead: '' },
+  },
+  // Spintax message templates. {{state}} is swapped for the chosen state before
+  // spinning. Every {a|b|c} group is resolved at random, so no two copies match.
+  templates: [
+    "{Every day|Every single day|Right now}, {impaired driving|drunk driving|driving under the influence} {puts {{state}} families at risk|threatens someone on a {{state}} road|changes lives across {{state}}}. {We won't stay quiet.|We refuse to look away.|Not on our watch.} {Plan the ride.|Line up a sober driver.|Hand over the keys.}",
+    "{To everyone driving in {{state}} tonight|{{state}}, this one is for you|If you are heading out in {{state}}}: {buzzed driving is drunk driving|one drink too many can end a life|the safest ride is a sober one}. {Call a ride|Text a friend|Make the responsible call} and {get home safe|protect the people you love|keep your community safe}.",
+    "{Behind every {{state}} DUI headline is a name|Every crash in {{state}} is preventable|These are not just {{state}} statistics — they are people}. {Help us turn awareness into action.|Share this and be the reason someone gets home tonight.|Be the friend who speaks up.}",
+    "{Marketers are creative people|We build campaigns for a living|We know how to make a message travel} — {so we are aiming that reach at {{state}}|so we are pointing it straight at drunk driving in {{state}}|so we are using it to keep {{state}} roads safer}. {Join us.|Share the message.|Add your voice.}",
+    "{A sober driver is a hero|A designated driver is a lifesaver|The best ride home is a sober one}. {{{state}}, tag the friend who always drives|Be that person for your crew in {{state}}|Make the plan before you head out in {{state}}} and {spread the word|help this reach further|keep everyone home}.",
+    "{No text is worth it. No drink is worth it.|One decision protects everyone on the road.|Getting home safe starts before the first drink.} {Wherever you are going in {{state}}|On every {{state}} road|For every family in {{state}}}, {plan ahead and drive sober|choose the sober ride|make the call that gets everyone home}.",
+    "{Someone in {{state}} is counting on you to get home safe|A whole {{state}} community is safer when you plan ahead|Your choice tonight ripples across {{state}}}. {Do not drink and drive.|Line up the ride first.|Keep the keys out of the wrong hands.} {It is that simple.|Every time.|No exceptions.}",
+  ],
+  // Hashtag pool (spintax groups). The campaign tag is always appended separately.
+  hashtags: [
+    '{#DontDrinkAndDrive|#DriveSober|#SoberDriving}',
+    '{#RoadSafety|#SafeRoads|#DriveSafe}',
+    '{#DUIAwareness|#StopDUI|#EndDrunkDriving}',
+    '{#DesignatedDriver|#PlanAheadForYourRide|#ArriveAlive}',
+    '{#PreventDrunkDriving|#ThinkBeforeYouDrink|#BuzzedDrivingIsDrunkDriving}',
+  ],
+  campaign: '#MarketersAgainstDrunkDriving',
+};
+
+function renderAmplify() {
+  const stateOptions = AMPLIFY_DATA.states
+    .map((s, i) => `<option value="${esc(s)}"${i === 4 ? ' selected' : ''}>${esc(s)}</option>`)
+    .join('');
+  const platformOptions = Object.entries(AMPLIFY_DATA.platforms)
+    .map(([k, v]) => `<option value="${k}">${esc(v.name)}</option>`)
+    .join('');
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'MADD Amplify — DUI Awareness Post Generator',
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    description:
+      'Free tool: pick your state and social platform to generate ready-to-post, copy-and-paste drunk-driving awareness posts with the right hashtags. Every post is spun for fresh, non-duplicate wording.',
+  };
+
+  const body = `
+<header class="hero"><div class="hero-inner">
+  <div class="eyebrow"><span class="pulse"></span>FREE TOOL · START POSTING</div>
+  <h1>Amplify — <em>Ready-to-Post</em> DUI Awareness Copy</h1>
+  <div class="subtitle">Pick your state and your platform. Get a finished, copy-and-paste post with the right hashtags — spun fresh every time so nobody's posting duplicate content.</div>
+  <p class="hero-tag">Care enough to say something? This does the writing for you. Choose, copy, paste, post. <span style="color:#fff;font-weight:600">${CAMPAIGN}</span></p>
+</div></header>
+<main class="wrap">
+  <a class="backlink" href="index.html">← Back home</a>
+  <p class="section-lede">The hardest part of speaking up is finding the words. So we wrote them. Choose your state and the network you post on, and you'll get a native-sounding message plus a hashtag set built for that platform. Hit <em>Spin a fresh version</em> as many times as you like — the wording changes every time, so it never reads as copy-paste spam.</p>
+
+  <div class="tool" id="amplify">
+    <div class="tool-controls">
+      <div class="field">
+        <label for="stateSel">Your state</label>
+        <select id="stateSel">${stateOptions}</select>
+      </div>
+      <div class="field">
+        <label for="platSel">Platform</label>
+        <select id="platSel">${platformOptions}</select>
+      </div>
+    </div>
+
+    <div class="out-block">
+      <div class="out-head"><h4>Your post</h4><span class="char-count" id="charCount"></span></div>
+      <textarea class="out-box" id="postBox" rows="5" spellcheck="false" aria-label="Generated post text"></textarea>
+      <div class="tool-actions">
+        <button class="t-btn spin" id="spinBtn" type="button">↻ Spin a fresh version</button>
+        <button class="t-btn copy" id="copyPost" type="button">Copy post</button>
+      </div>
+    </div>
+
+    <div class="out-block">
+      <div class="out-head"><h4>Hashtags for this platform</h4></div>
+      <textarea class="out-box hash-box" id="hashBox" rows="2" spellcheck="false" aria-label="Generated hashtags"></textarea>
+      <div class="tool-actions">
+        <button class="t-btn copy" id="copyHash" type="button">Copy hashtags</button>
+        <button class="t-btn ghost" id="copyAll" type="button">Copy post + hashtags</button>
+      </div>
+      <div class="share-row">
+        <span class="lbl">Or share now:</span>
+        <a class="snip-btn x" id="shX" target="_blank" rel="noopener">Post on X</a>
+        <a class="snip-btn fb" id="shFb" target="_blank" rel="noopener">Facebook</a>
+        <a class="snip-btn li" id="shLi" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+
+    <p class="tool-note">Every post is generated in your browser and always carries <strong>${CAMPAIGN}</strong> so the message stays connected to the movement. Wording is educational and awareness-focused — always follow each platform's posting rules. This tool runs fully client-side, so it works anywhere this page is hosted.</p>
+  </div>
+
+  <div class="cta-band">
+    <h2>One post is reach. A hundred posts is a movement.</h2>
+    <p>Grab a fresh version, drop it in your feed, and pass this tool to a friend who cares as much as you do.</p>
+    <span class="tag">${CAMPAIGN}</span>
+  </div>
+</main>
+<script>
+(function(){
+  var DATA = ${JSON.stringify(AMPLIFY_DATA)};
+
+  // Resolve spintax {a|b|c} groups, innermost first. Mirrors the backend engine.
+  function spin(t){
+    var re=/\\{([^{}]*)\\}/, out=t, guard=0;
+    while(re.test(out)){
+      out=out.replace(re,function(_m,body){
+        var opts=body.split('|');
+        return opts[Math.floor(Math.random()*opts.length)];
+      });
+      if(guard++>1000)break;
+    }
+    return out.replace(/\\s+/g,' ').trim();
+  }
+
+  function pickHashtags(n){
+    var seen={}, out=[], guard=0;
+    while(out.length<n && guard<n*25){
+      guard++;
+      var tag=spin(DATA.hashtags[Math.floor(Math.random()*DATA.hashtags.length)]);
+      if(!seen[tag.toLowerCase()]){ seen[tag.toLowerCase()]=1; out.push(tag); }
+    }
+    out.push(DATA.campaign);
+    return out;
+  }
+
+  var stateSel=document.getElementById('stateSel');
+  var platSel=document.getElementById('platSel');
+  var postBox=document.getElementById('postBox');
+  var hashBox=document.getElementById('hashBox');
+  var charCount=document.getElementById('charCount');
+
+  function generate(){
+    var state=stateSel.value;
+    var plat=DATA.platforms[platSel.value];
+    var tpl=DATA.templates[Math.floor(Math.random()*DATA.templates.length)];
+    var lead=spin(plat.lead);
+    var body=(lead?lead+' ':'')+tpl.split('{{state}}').join(state);
+    postBox.value=spin(body);
+    hashBox.value=pickHashtags(plat.hashtags).join(' ');
+    updateCount();
+    updateShare();
+  }
+
+  function updateCount(){
+    var full=postBox.value+' '+hashBox.value;
+    var plat=DATA.platforms[platSel.value];
+    var over=full.length>plat.limit;
+    charCount.textContent=full.length+' / '+plat.limit+' chars';
+    charCount.className='char-count'+(over?' over':'');
+  }
+
+  function updateShare(){
+    var text=postBox.value+' '+hashBox.value;
+    var url=location.origin+location.pathname.replace(/amplify\\.html$/,'');
+    var enc=encodeURIComponent(text);
+    var eu=encodeURIComponent(url);
+    document.getElementById('shX').href='https://twitter.com/intent/tweet?text='+enc;
+    document.getElementById('shFb').href='https://www.facebook.com/sharer/sharer.php?u='+eu+'&quote='+enc;
+    document.getElementById('shLi').href='https://www.linkedin.com/sharing/share-offsite/?url='+eu;
+  }
+
+  function flash(btn,label){
+    var orig=btn.textContent;
+    btn.textContent=label||'Copied!';
+    btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent=orig; btn.classList.remove('copied'); },1500);
+  }
+  function copy(txt,btn){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){flash(btn);},function(){legacy(txt,btn);});
+    } else { legacy(txt,btn); }
+  }
+  function legacy(txt,btn){
+    var ta=document.createElement('textarea');
+    ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); flash(btn); }catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  document.getElementById('spinBtn').addEventListener('click',generate);
+  document.getElementById('copyPost').addEventListener('click',function(){copy(postBox.value,this);});
+  document.getElementById('copyHash').addEventListener('click',function(){copy(hashBox.value,this);});
+  document.getElementById('copyAll').addEventListener('click',function(){copy(postBox.value+'\\n\\n'+hashBox.value,this);});
+  stateSel.addEventListener('change',generate);
+  platSel.addEventListener('change',generate);
+  postBox.addEventListener('input',function(){updateCount();updateShare();});
+  hashBox.addEventListener('input',function(){updateCount();updateShare();});
+
+  generate();
+})();
+</script>`;
+
+  return page({
+    title: 'Amplify — Ready-to-Post DUI Awareness Copy | MADD',
+    description:
+      'Free tool: pick your state and social platform to get ready-to-post, copy-and-paste drunk-driving awareness posts with the right hashtags. Spun fresh every time — no duplicate content. #MarketersAgainstDrunkDriving',
+    schema,
+    body,
+    current: 'amplify',
+    prefix: '',
+  });
+}
+
 function renderFollow() {
   const schema = {
     '@context': 'https://schema.org',
@@ -686,6 +948,7 @@ for (const a of seoArticles) {
 }
 writeFileSync(join(__dirname, 'index.html'), renderHome());
 writeFileSync(join(__dirname, 'about.html'), renderAbout());
+writeFileSync(join(__dirname, 'amplify.html'), renderAmplify());
 writeFileSync(join(__dirname, 'best-drunk-driving-sites-to-follow.html'), renderFollow());
 
 /* ---------------------------- SITEMAP + ROBOTS ---------------------------- */
@@ -695,6 +958,7 @@ const today = new Date().toISOString().slice(0, 10);
 const urls = [
   { loc: '', priority: '1.0', lastmod: today },
   { loc: 'about.html', priority: '0.7', lastmod: today },
+  { loc: 'amplify.html', priority: '0.9', lastmod: today },
   { loc: 'best-drunk-driving-sites-to-follow.html', priority: '0.8', lastmod: today },
   ...guides.map((g) => ({ loc: `guides/${g.slug}.html`, priority: '0.8', lastmod: today })),
   ...seoArticles.map((a) => ({
@@ -741,13 +1005,16 @@ ${seoArticles.map((a) => `- [${a.title}](${BASE_URL}/articles/${a.slug}.html): $
 ## Guides
 ${guides.map((g) => `- [${g.title}](${BASE_URL}/guides/${g.slug}.html): ${g.metaDescription}`).join('\n')}
 
+## Tools
+- [Amplify — Ready-to-Post DUI Awareness Copy](${BASE_URL}/amplify.html): Free client-side tool. Pick a state and a social platform to get copy-and-paste drunk-driving awareness posts with platform-appropriate hashtags, spun fresh each time to avoid duplicate content.
+
 ## Resources
 - [The 20 Best Drunk Driving Sites to Follow](${BASE_URL}/best-drunk-driving-sites-to-follow.html): A vetted list of reputable organizations, advocates, and data sources on drunk driving and road safety.
 `;
 writeFileSync(join(__dirname, 'llms.txt'), llms);
 
-const total = guides.length + seoArticles.length + 3;
+const total = guides.length + seoArticles.length + 4;
 console.log(
-  `✓ Built site: home + about + follow + ${guides.length} guides + ${seoArticles.length} articles = ${total} pages`
+  `✓ Built site: home + about + amplify + follow + ${guides.length} guides + ${seoArticles.length} articles = ${total} pages`
 );
 console.log(`✓ Wrote sitemap.xml (${urls.length} URLs) + robots.txt + llms.txt`);
