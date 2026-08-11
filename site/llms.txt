@@ -21,5 +21,8 @@
 - [Working With a Drunk Driving Lawyer](https://marketersagainstdrunkdriving.com/guides/drunk-driving-lawyer.html): What does a drunk driving lawyer actually do, when do you need one, and how do you find a good one? An interactive guide with a vetting checklist you can use today.
 - [Hiring a Drunk Driving Attorney](https://marketersagainstdrunkdriving.com/guides/drunk-driving-attorney.html): When should you hire a drunk driving attorney, what will the process look like, and how do you pick the right one? An interactive step-by-step guide with a checklist.
 
+## Tools
+- [Amplify — Ready-to-Post DUI Awareness Copy](https://marketersagainstdrunkdriving.com/amplify.html): Free client-side tool. Pick a state and a social platform to get copy-and-paste drunk-driving awareness posts with platform-appropriate hashtags, spun fresh each time to avoid duplicate content.
+
 ## Resources
 - [The 20 Best Drunk Driving Sites to Follow](https://marketersagainstdrunkdriving.com/best-drunk-driving-sites-to-follow.html): A vetted list of reputable organizations, advocates, and data sources on drunk driving and road safety.
