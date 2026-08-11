@@ -218,6 +218,21 @@ footer a{color:#cdd9f2}
 .share-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
 .share-row .lbl{font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);margin-right:2px}
 .tool-note{font-size:13px;color:var(--ink-mute);margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+
+/* live DUI radar */
+.radar-wrap{margin-bottom:14px}
+.radar-status{font-family:var(--display);font-size:12px;letter-spacing:.05em;color:var(--ink-mute);align-self:center}
+.radar-status.err{color:var(--red);font-weight:700}
+.radar-result{margin-top:10px}
+.radar-news{background:var(--cream);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:10px;padding:16px 18px;margin-bottom:22px}
+.radar-news .rn-kicker{font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.radar-news .rn-badge{background:var(--red);color:#fff;border-radius:11px;padding:2px 9px;font-size:10px;letter-spacing:.08em}
+.radar-news h4{font-family:var(--display);font-weight:600;font-size:18px;color:var(--navy);line-height:1.25;margin-bottom:8px}
+.radar-news .rn-meta{font-size:13px;color:var(--ink-mute)}
+.radar-news .rn-meta a{color:var(--navy);font-weight:600}
+.radar-blurb{font-style:italic;color:var(--ink-soft);margin:12px 0 0}
+.rspin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--red);border-radius:50%;animation:rspin .7s linear infinite;vertical-align:-2px;margin-right:7px}
+@keyframes rspin{to{transform:rotate(360deg)}}
 @media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}.tool-controls{grid-template-columns:1fr}.tool{padding:22px 18px}}
 `;
 
@@ -468,6 +483,130 @@ function renderArticle(a) {
 }
 
 /* ---------------------------- HOME ---------------------------- */
+/* ---------------------------- LIVE DUI RADAR (Share to Care) ---------------------------- */
+/* Backend: Cloudflare Pages Function at /api/radar (free; OpenAI key stays server-side).
+   To point at an n8n webhook instead, change RADAR_API below to the webhook URL. */
+const RADAR_PLATFORMS = [
+  ['x', 'X (Twitter)'], ['instagram', 'Instagram'], ['facebook', 'Facebook'],
+  ['tiktok', 'TikTok'], ['linkedin', 'LinkedIn'], ['threads', 'Threads'],
+  ['tumblr', 'Tumblr'], ['blogger', 'Blogger'], ['pinterest', 'Pinterest'],
+  ['reddit', 'Reddit'], ['youtube', 'YouTube'],
+];
+
+function renderRadarSection() {
+  const stateOptions =
+    '<option value="United States" selected>United States (national)</option>' +
+    AMPLIFY_DATA.states.map((s) => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+  const platformOptions = RADAR_PLATFORMS.map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join('');
+
+  return `
+  <div class="hub-section" id="radar">
+    <div class="radar-wrap">
+      <div class="eyebrow" style="color:var(--red)"><span class="pulse" style="background:var(--red)"></span>SHARE TO CARE · LIVE DUI RADAR</div>
+      <h2 style="margin-top:12px">Turn today's drunk-driving headlines into a post that makes it impossible to ignore.</h2>
+      <p class="lede">Pick a state and a platform. We pull the latest <strong>real</strong> drunk-driving news for that state from free news feeds, an AI rewrites the worst of it into a factual, ready-to-post message — no names, just accountability — and hands you the right hashtags for that network. Copy, paste, post. <strong>${CAMPAIGN}</strong></p>
+    </div>
+    <div class="tool" id="radarTool">
+      <div class="tool-controls">
+        <div class="field"><label for="radarState">State</label><select id="radarState">${stateOptions}</select></div>
+        <div class="field"><label for="radarPlatform">Platform</label><select id="radarPlatform">${platformOptions}</select></div>
+      </div>
+      <div class="tool-actions">
+        <button class="t-btn spin" id="radarGo" type="button">↻ Pull the latest &amp; write my post</button>
+        <span class="radar-status" id="radarStatus"></span>
+      </div>
+
+      <div class="radar-result" id="radarResult" hidden>
+        <div class="radar-news" id="radarNews"></div>
+        <div class="out-block">
+          <div class="out-head"><h4>Your post</h4><span class="char-count" id="radarCount"></span></div>
+          <textarea class="out-box" id="radarPost" rows="5" spellcheck="false" aria-label="Generated post"></textarea>
+          <div class="tool-actions"><button class="t-btn copy" id="radarCopyPost" type="button">Copy post</button></div>
+        </div>
+        <div class="out-block">
+          <div class="out-head"><h4>Hashtags for this platform</h4></div>
+          <textarea class="out-box hash-box" id="radarHash" rows="2" spellcheck="false" aria-label="Generated hashtags"></textarea>
+          <div class="tool-actions">
+            <button class="t-btn copy" id="radarCopyHash" type="button">Copy hashtags</button>
+            <button class="t-btn ghost" id="radarCopyAll" type="button">Copy post + hashtags</button>
+          </div>
+          <div class="share-row">
+            <span class="lbl">Or share now:</span>
+            <a class="snip-btn x" id="radarShX" target="_blank" rel="noopener">Post on X</a>
+            <a class="snip-btn fb" id="radarShFb" target="_blank" rel="noopener">Facebook</a>
+            <a class="snip-btn li" id="radarShLi" target="_blank" rel="noopener">LinkedIn</a>
+          </div>
+        </div>
+      </div>
+      <p class="tool-note">Posts are written to be <strong>factual and de-identified</strong> — no names of drivers, victims, or families — and always carry ${CAMPAIGN}. News is pulled live from public feeds; always sanity-check before posting and follow each platform's rules.</p>
+    </div>
+  </div>
+  <script>${RADAR_JS}</script>`;
+}
+
+const RADAR_JS = `(function(){
+  var RADAR_API = '/api/radar';
+  var LIMITS = { x:280, twitter:280, instagram:2200, facebook:2000, tiktok:2200, linkedin:3000, threads:500, tumblr:4000, blogger:5000, pinterest:500, reddit:40000, youtube:5000 };
+  var $ = function(id){ return document.getElementById(id); };
+  var stateSel=$('radarState'), platSel=$('radarPlatform'), goBtn=$('radarGo'), status=$('radarStatus');
+  var result=$('radarResult'), news=$('radarNews'), postBox=$('radarPost'), hashBox=$('radarHash'), count=$('radarCount');
+  if(!stateSel) return;
+  function esc(s){ var d=document.createElement('div'); d.textContent=String(s==null?'':s); return d.innerHTML; }
+  function setStatus(html, isErr){ status.innerHTML=html||''; status.className='radar-status'+(isErr?' err':''); }
+  function updateCount(){
+    var full=(postBox.value+' '+hashBox.value).trim();
+    var lim=LIMITS[platSel.value]||280;
+    count.textContent=full.length+' / '+lim+' chars';
+    count.className='char-count'+(full.length>lim?' over':'');
+  }
+  function updateShare(text){
+    var url='https://marketersagainstdrunkdriving.com/';
+    var enc=encodeURIComponent(text), eu=encodeURIComponent(url);
+    $('radarShX').href='https://twitter.com/intent/tweet?text='+enc;
+    $('radarShFb').href='https://www.facebook.com/sharer/sharer.php?u='+eu+'&quote='+enc;
+    $('radarShLi').href='https://www.linkedin.com/sharing/share-offsite/?url='+eu;
+  }
+  function render(d){
+    var badge = d.hasNews ? '<span class="rn-badge">LATEST</span>' : '<span class="rn-badge" style="background:#6c7891">AWARENESS</span>';
+    var meta = d.hasNews
+      ? 'Source: '+esc(d.source||'news')+(d.published?' · '+esc(d.published):'')+(d.url?' · <a href="'+esc(d.url)+'" target="_blank" rel="noopener">Read the report →</a>':'')
+      : 'No fresh incident pulled for '+esc(d.state)+' right now — here is an awareness post you can still share.';
+    news.innerHTML='<div class="rn-kicker">'+badge+' '+esc(d.state)+'</div>'+
+      (d.hasNews?'<h4>'+esc(d.headline)+'</h4>':'')+
+      '<div class="rn-meta">'+meta+'</div>'+
+      (d.blurb?'<p class="radar-blurb">'+esc(d.blurb)+'</p>':'');
+    postBox.value=d.post||'';
+    hashBox.value=(d.hashtags||[]).join(' ');
+    result.hidden=false;
+    updateCount(); updateShare(postBox.value+' '+hashBox.value);
+    setStatus(d.degraded?'Shown with a fallback post (AI or news source was briefly unavailable).':'Fresh as of just now.');
+  }
+  var busy=false;
+  function run(){
+    if(busy) return; busy=true;
+    goBtn.disabled=true; setStatus('<span class="rspin"></span>Pulling '+esc(stateSel.value)+' news &amp; writing your post…');
+    fetch(RADAR_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({state:stateSel.value,platform:platSel.value})})
+      .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+      .then(function(d){ render(d); })
+      .catch(function(e){ setStatus('Could not reach the radar service. Is /api/radar deployed with an OPENAI_API_KEY set? ('+esc(e.message)+')', true); })
+      .then(function(){ busy=false; goBtn.disabled=false; });
+  }
+  function flash(btn){ var o=btn.textContent; btn.textContent='Copied!'; setTimeout(function(){ btn.textContent=o; },1400); }
+  function copy(txt,btn){
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(function(){flash(btn);},function(){legacy(txt,btn);}); }
+    else legacy(txt,btn);
+  }
+  function legacy(txt,btn){ var t=document.createElement('textarea'); t.value=txt; t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); try{document.execCommand('copy');flash(btn);}catch(e){} document.body.removeChild(t); }
+  goBtn.addEventListener('click', run);
+  platSel.addEventListener('change', function(){ updateCount(); if(!result.hidden) run(); });
+  postBox.addEventListener('input', function(){ updateCount(); updateShare(postBox.value+' '+hashBox.value); });
+  hashBox.addEventListener('input', function(){ updateCount(); updateShare(postBox.value+' '+hashBox.value); });
+  $('radarCopyPost').addEventListener('click', function(){ copy(postBox.value,this); });
+  $('radarCopyHash').addEventListener('click', function(){ copy(hashBox.value,this); });
+  $('radarCopyAll').addEventListener('click', function(){ copy(postBox.value+'\\n\\n'+hashBox.value,this); });
+  setStatus('Pick a state and platform, then hit the button to pull live news.');
+})();`;
+
 function renderHome() {
   const guideCards = guides
     .slice(0, 3)
@@ -506,7 +645,7 @@ function renderHome() {
   <div style="margin-top:30px"><a class="btn-hero" href="about.html">Read how this started →</a></div>
 </div></header>
 <main class="wrap" style="max-width:1100px">
-
+${renderRadarSection()}
   <div class="hub-section">
     <h2>Why this exists</h2>
     <p class="lede">I'm an SEO and brand builder. I know how to make a message travel. After a wrong turn of my own, I decided the most responsible thing I could do with that skill was aim it at drunk driving — prevention, education, and getting people the help they need before anyone gets hurt. <a href="about.html">Here's the full story →</a></p>
