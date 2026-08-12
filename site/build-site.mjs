@@ -300,6 +300,7 @@ function brandBar(current, prefix = '') {
   </a>
   <nav class="brand-nav">
     ${link('index.html', 'Home', 'home')}
+    ${link('pledge.html', 'Pledge', 'pledge')}
     ${link('about.html', 'About', 'about')}
     ${link('amplify.html', 'Amplify', 'amplify')}
     ${link('index.html#guides', 'Guides', 'guides')}
@@ -957,6 +958,7 @@ const today = new Date().toISOString().slice(0, 10);
 
 const urls = [
   { loc: '', priority: '1.0', lastmod: today },
+  { loc: 'pledge.html', priority: '0.9', lastmod: today },
   { loc: 'about.html', priority: '0.7', lastmod: today },
   { loc: 'amplify.html', priority: '0.9', lastmod: today },
   { loc: 'best-drunk-driving-sites-to-follow.html', priority: '0.8', lastmod: today },
