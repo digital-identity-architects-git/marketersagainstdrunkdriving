@@ -193,6 +193,21 @@ footer a{color:#cdd9f2}
 .share-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
 .share-row .lbl{font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);margin-right:2px}
 .tool-note{font-size:13px;color:var(--ink-mute);margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+
+/* live DUI radar */
+.radar-wrap{margin-bottom:14px}
+.radar-status{font-family:var(--display);font-size:12px;letter-spacing:.05em;color:var(--ink-mute);align-self:center}
+.radar-status.err{color:var(--red);font-weight:700}
+.radar-result{margin-top:10px}
+.radar-news{background:var(--cream);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:10px;padding:16px 18px;margin-bottom:22px}
+.radar-news .rn-kicker{font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.radar-news .rn-badge{background:var(--red);color:#fff;border-radius:11px;padding:2px 9px;font-size:10px;letter-spacing:.08em}
+.radar-news h4{font-family:var(--display);font-weight:600;font-size:18px;color:var(--navy);line-height:1.25;margin-bottom:8px}
+.radar-news .rn-meta{font-size:13px;color:var(--ink-mute)}
+.radar-news .rn-meta a{color:var(--navy);font-weight:600}
+.radar-blurb{font-style:italic;color:var(--ink-soft);margin:12px 0 0}
+.rspin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--red);border-radius:50%;animation:rspin .7s linear infinite;vertical-align:-2px;margin-right:7px}
+@keyframes rspin{to{transform:rotate(360deg)}}
 @media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}.tool-controls{grid-template-columns:1fr}.tool{padding:22px 18px}}
 </style></head>
 <body>
