@@ -24,201 +24,234 @@ const { guides } = await import(join(root, 'backend/dist/content/guides.js'));
 
 const CAMPAIGN = '#marketersagainstdrunkdriving';
 const FONTS =
-  '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">';
+  '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Pirata+One&family=Oswald:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">';
 
 /* ------------------------------------------------------------------ */
-/* Shared brand CSS — Old Glory red, navy blue, white                  */
+/* Shared brand CSS — gothic black death: void, blood, bone            */
 /* ------------------------------------------------------------------ */
 const CSS = `
 :root{
-  --navy:#0a2a66; --navy-deep:#06184a; --navy-soft:#13316f;
-  --red:#c8102e; --red-deep:#a00d26;
-  --white:#ffffff; --cream:#f4f7fc; --line:#d8e0f0;
-  --ink:#13213f; --ink-soft:#43506e; --ink-mute:#6c7891;
+  /* gothic black death — void, blood, bone */
+  --void:#050308; --pit:#080510; --slab:#0d0912; --slab-2:#140d1a; --slab-3:#1a1122;
+  --blood:#d4102c; --blood-deep:#7a0818; --ember:#ff3a52; --rust:#8c2f1a;
+  --bone:#ece7ef; --ash:#a99fb2; --ash-mute:#6f6878; --iron:#3a3344;
+  --line:rgba(236,231,239,.10); --line-blood:rgba(212,16,44,.28);
+  --gothic:'Cinzel',Georgia,'Times New Roman',serif;
+  --black-letter:'Pirata One',var(--gothic);
   --display:'Oswald',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  /* legacy aliases — older inline styles still resolve to the gothic palette */
+  --navy:#0d0912; --navy-deep:#050308; --navy-soft:#140d1a;
+  --red:#d4102c; --red-deep:#7a0818;
+  --white:#ece7ef; --cream:#0d0912;
+  --ink:#ece7ef; --ink-soft:#a99fb2; --ink-mute:#6f6878;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--cream);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased}
-::selection{background:var(--red);color:#fff}
-a{color:var(--navy)}
-em{color:var(--red);font-style:italic}
+body{background:var(--void);color:var(--bone);font-family:var(--serif);font-size:18px;line-height:1.72;-webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative}
+::selection{background:var(--blood);color:#fff}
+a{color:var(--ember);text-decoration:none}
+a:hover{text-decoration:underline}
+em{color:var(--ember);font-style:italic}
+strong{color:var(--bone)}
+
+/* vignette + film grain — the pall over everything */
+body::before{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(125% 85% at 50% -10%,rgba(122,8,24,.22) 0%,transparent 45%),radial-gradient(100% 80% at 50% 100%,transparent 40%,rgba(0,0,0,.72) 100%)}
+body::after{content:"";position:fixed;inset:-50%;z-index:2;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+.brand-bar,.hero,.wrap,footer,main{position:relative;z-index:5}
 
 /* brand bar */
-.brand-bar{background:var(--navy);position:sticky;top:0;z-index:90;border-bottom:4px solid var(--red)}
+.brand-bar{background:rgba(5,3,8,.86);backdrop-filter:blur(10px);position:sticky;top:0;z-index:90;border-bottom:1px solid var(--line-blood)}
 .brand-inner{max-width:1100px;margin:0 auto;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .brand-mark{display:flex;align-items:center;gap:12px;text-decoration:none}
-.shield{width:44px;height:50px;flex-shrink:0;background:var(--white);clip-path:polygon(50% 0,100% 14%,100% 60%,50% 100%,0 60%,0 14%);display:flex;align-items:center;justify-content:center;border:0}
-.shield span{font-family:var(--display);font-weight:700;font-size:15px;color:var(--navy);letter-spacing:.02em;margin-top:-4px}
-.brand-name{font-family:var(--display);font-weight:700;font-size:20px;color:#fff;letter-spacing:.02em;line-height:1}
-.brand-sub{font-family:var(--display);font-weight:400;font-size:9.5px;letter-spacing:.28em;color:#9fb4e0;text-transform:uppercase;margin-top:4px}
-.brand-nav{display:flex;gap:6px;flex-wrap:wrap}
-.brand-nav a{font-family:var(--display);font-weight:500;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#cdd9f2;text-decoration:none;padding:8px 12px;border-radius:4px;transition:.15s}
-.brand-nav a:hover,.brand-nav a.current{background:var(--red);color:#fff}
+.brand-mark:hover{text-decoration:none}
+.shield{width:44px;height:50px;flex-shrink:0;background:linear-gradient(165deg,var(--blood),var(--blood-deep));clip-path:polygon(50% 0,100% 14%,100% 60%,50% 100%,0 60%,0 14%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(212,16,44,.42)}
+.shield span{font-family:var(--gothic);font-weight:900;font-size:13px;color:#fff;letter-spacing:.02em;margin-top:-3px}
+.brand-name{font-family:var(--gothic);font-weight:800;font-size:20px;color:var(--bone);letter-spacing:.08em;line-height:1}
+.brand-sub{font-family:var(--display);font-weight:400;font-size:9px;letter-spacing:.3em;color:var(--ash-mute);text-transform:uppercase;margin-top:4px}
+.brand-nav{display:flex;gap:4px;flex-wrap:wrap}
+.brand-nav a{font-family:var(--display);font-weight:500;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);text-decoration:none;padding:8px 12px;border-radius:3px;transition:.15s}
+.brand-nav a:hover,.brand-nav a.current{background:var(--blood);color:#fff;text-decoration:none;box-shadow:0 0 16px rgba(212,16,44,.4)}
 
 /* hero */
-.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-deep) 100%);color:#fff;padding:64px 28px 52px;border-bottom:6px solid var(--red);position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(255,255,255,.025) 60px,rgba(255,255,255,.025) 61px);pointer-events:none}
-.hero-inner{max-width:1100px;margin:0 auto;position:relative}
-.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:#fff;background:var(--red);padding:7px 14px;border-radius:3px;margin-bottom:22px}
-.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,5vw,56px);line-height:1.05;letter-spacing:-.01em;margin-bottom:16px}
-.hero .subtitle{font-size:21px;color:#cdd9f2;max-width:760px;margin-bottom:18px}
-.hero-tag{font-size:16px;color:#aebfe2;max-width:740px}
+.hero{background:linear-gradient(175deg,var(--slab-2) 0%,var(--pit) 55%,var(--void) 100%);color:var(--bone);padding:70px 28px 58px;border-bottom:1px solid var(--line-blood);overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(236,231,239,.018) 60px,rgba(236,231,239,.018) 61px)}
+.hero::after{content:"";position:absolute;left:50%;top:-30%;width:70vw;height:70vw;transform:translateX(-50%);pointer-events:none;
+  background:radial-gradient(circle,rgba(212,16,44,.16),transparent 62%);filter:blur(60px)}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:2}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--display);font-weight:600;font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:#fff;background:var(--blood-deep);border:1px solid var(--line-blood);padding:7px 14px;border-radius:2px;margin-bottom:22px}
+.hero h1{font-family:var(--gothic);font-weight:900;font-size:clamp(34px,5vw,58px);line-height:1.06;letter-spacing:.01em;margin-bottom:16px;color:#fff;text-shadow:0 0 34px rgba(212,16,44,.45)}
+.hero .subtitle{font-size:21px;color:var(--ash);max-width:760px;margin-bottom:18px}
+.hero-tag{font-size:16px;color:var(--ash-mute);max-width:740px}
 .meta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
-.meta-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-left:3px solid var(--red);padding:12px 18px;border-radius:5px;min-width:150px}
-.meta-card .label{font-family:var(--display);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#8fa5d4;margin-bottom:5px}
-.meta-card .value{font-family:var(--display);font-weight:600;font-size:16px;color:#fff}
+.meta-card{background:rgba(236,231,239,.04);border:1px solid var(--line);border-left:3px solid var(--blood);padding:12px 18px;border-radius:4px;min-width:150px}
+.meta-card .label{font-family:var(--display);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash-mute);margin-bottom:5px}
+.meta-card .value{font-family:var(--display);font-weight:600;font-size:16px;color:var(--bone)}
 
 /* progress rail */
 .progress-rail{margin-top:32px;max-width:640px}
-.progress-track{height:12px;background:rgba(255,255,255,.14);border-radius:7px;overflow:hidden}
-.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#fff,var(--red));transition:width .35s ease}
-.progress-meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-family:var(--display);font-size:13px;letter-spacing:.04em;color:#cdd9f2}
-.reset-btn{font-family:var(--display);font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:transparent;border:1px solid rgba(255,255,255,.3);color:#cdd9f2;padding:5px 12px;border-radius:4px;cursor:pointer}
-.reset-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
+.progress-track{height:12px;background:rgba(236,231,239,.08);border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--blood-deep),var(--ember));box-shadow:0 0 18px rgba(212,16,44,.55);transition:width .35s ease}
+.progress-meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-family:var(--display);font-size:13px;letter-spacing:.06em;color:var(--ash)}
+.reset-btn{font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:transparent;border:1px solid var(--iron);color:var(--ash);padding:5px 12px;border-radius:3px;cursor:pointer}
+.reset-btn:hover{background:var(--blood);border-color:var(--blood);color:#fff}
 
 /* layout */
 .wrap{max-width:880px;margin:0 auto;padding:54px 28px}
-.section-title{font-family:var(--display);font-weight:700;font-size:30px;color:var(--navy);margin:8px 0 8px}
-.section-lede{color:var(--ink-soft);margin-bottom:30px;max-width:720px}
+.section-title{font-family:var(--gothic);font-weight:800;font-size:30px;color:var(--bone);letter-spacing:.02em;margin:8px 0 8px}
+.section-lede{color:var(--ash);margin-bottom:30px;max-width:720px}
 
 /* lesson / step cards */
-.lesson{background:#fff;border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:10px;padding:30px 32px;margin-bottom:22px;box-shadow:0 2px 10px rgba(10,42,102,.05);scroll-margin-top:90px}
-.lesson.done{border-top-color:#2e7d32}
+.lesson{background:linear-gradient(180deg,var(--slab-2),var(--slab));border:1px solid var(--line);border-top:3px solid var(--blood-deep);border-radius:8px;padding:30px 32px;margin-bottom:22px;box-shadow:0 10px 30px rgba(0,0,0,.55);scroll-margin-top:90px}
+.lesson.done{border-top-color:var(--ember)}
 .lesson-head{display:flex;align-items:center;gap:16px;margin-bottom:14px}
-.lesson-num{font-family:var(--display);font-weight:700;font-size:18px;width:46px;height:46px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--navy);color:#fff;border-radius:8px}
-.lesson.done .lesson-num{background:#2e7d32}
-.lesson-head h3{font-family:var(--display);font-weight:600;font-size:23px;color:var(--navy);line-height:1.15}
-.lesson-body p{margin-bottom:14px}
+.lesson-num{font-family:var(--gothic);font-weight:800;font-size:18px;width:46px;height:46px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,var(--blood),var(--blood-deep));color:#fff;border-radius:6px;box-shadow:0 0 18px rgba(212,16,44,.35)}
+.lesson.done .lesson-num{background:linear-gradient(160deg,var(--ember),var(--blood))}
+.lesson-head h3{font-family:var(--gothic);font-weight:700;font-size:23px;color:var(--bone);line-height:1.18;letter-spacing:.01em}
+.lesson-body p{margin-bottom:14px;color:var(--ash)}
 .lesson-body ul{margin:0 0 16px 22px}
-.lesson-body li{margin-bottom:6px}
+.lesson-body li{margin-bottom:6px;color:var(--ash)}
 
 /* checklist */
-.checklist{display:flex;flex-direction:column;gap:9px;margin-top:18px;padding-top:18px;border-top:1px dashed var(--line)}
-.check-item{display:flex;align-items:flex-start;gap:12px;background:var(--cream);border:2px solid var(--line);border-radius:8px;padding:12px 15px;cursor:pointer;font-size:15px;transition:.15s}
-.check-item:hover{border-color:var(--navy)}
-.check-item.checked{border-color:#2e7d32;background:#f1faf1}
-.check-item.checked .ci-text{text-decoration:line-through;color:#2e7d32}
-.check-item input{margin-top:3px;width:19px;height:19px;accent-color:var(--red);cursor:pointer;flex-shrink:0}
+.checklist{display:flex;flex-direction:column;gap:9px;margin-top:18px;padding-top:18px;border-top:1px dashed var(--iron)}
+.check-item{display:flex;align-items:flex-start;gap:12px;background:var(--pit);border:1px solid var(--iron);border-radius:6px;padding:12px 15px;cursor:pointer;font-size:15px;color:var(--ash);transition:.15s}
+.check-item:hover{border-color:var(--blood);box-shadow:0 0 14px rgba(212,16,44,.18)}
+.check-item.checked{border-color:var(--ember);background:rgba(212,16,44,.09)}
+.check-item.checked .ci-text{text-decoration:line-through;color:var(--ember)}
+.check-item input{margin-top:3px;width:19px;height:19px;accent-color:var(--blood);cursor:pointer;flex-shrink:0}
 
 /* faq */
 .faq-wrap{margin-top:46px}
-.faq-wrap h2{font-family:var(--display);font-weight:700;font-size:26px;color:var(--navy);margin-bottom:18px}
-.faq{background:#fff;border:1px solid var(--line);border-left:4px solid var(--red);border-radius:8px;padding:16px 20px;margin-bottom:12px}
-.faq summary{font-family:var(--display);font-weight:600;font-size:17px;color:var(--navy);cursor:pointer}
-.faq p{margin-top:12px;color:var(--ink-soft)}
+.faq-wrap h2{font-family:var(--gothic);font-weight:800;font-size:26px;color:var(--bone);margin-bottom:18px}
+.faq{background:var(--slab);border:1px solid var(--line);border-left:3px solid var(--blood);border-radius:6px;padding:16px 20px;margin-bottom:12px}
+.faq summary{font-family:var(--gothic);font-weight:700;font-size:17px;color:var(--bone);cursor:pointer}
+.faq summary::marker{color:var(--blood)}
+.faq p{margin-top:12px;color:var(--ash)}
 
 /* article body */
-.article-body h2{font-family:var(--display);font-weight:700;font-size:26px;color:var(--navy);margin:34px 0 12px}
-.article-body h3{font-family:var(--display);font-weight:600;font-size:19px;color:var(--red);margin:24px 0 10px}
+.article-body{color:var(--ash)}
+.article-body h2{font-family:var(--gothic);font-weight:800;font-size:27px;color:var(--bone);margin:34px 0 12px;letter-spacing:.01em}
+.article-body h3{font-family:var(--gothic);font-weight:700;font-size:19px;color:var(--ember);margin:24px 0 10px}
 .article-body p{margin-bottom:16px}
 .article-body ul{margin:0 0 18px 24px}
 .article-body li{margin-bottom:7px}
+.article-body li::marker{color:var(--blood)}
 .article-body table{width:100%;border-collapse:collapse;margin:0 0 22px;font-size:15px}
-.article-body th,.article-body td{border:1px solid var(--line);padding:10px 13px;text-align:left}
-.article-body th{background:var(--navy);color:#fff;font-family:var(--display);font-weight:500}
-.article-body tr:nth-child(even) td{background:var(--cream)}
-.article-disclaimer{margin-top:34px;padding:18px;background:var(--cream);border:1px dashed var(--red);border-radius:8px;font-size:14px;color:var(--ink-soft)}
-.campaign-tag{color:var(--red);font-weight:700}
+.article-body th,.article-body td{border:1px solid var(--iron);padding:10px 13px;text-align:left}
+.article-body th{background:var(--slab-3);color:var(--bone);font-family:var(--display);font-weight:500;letter-spacing:.06em;text-transform:uppercase;font-size:13px}
+.article-body tr:nth-child(even) td{background:rgba(236,231,239,.03)}
+.article-disclaimer{margin-top:34px;padding:18px;background:var(--slab);border:1px dashed var(--line-blood);border-radius:6px;font-size:14px;color:var(--ash-mute)}
+.campaign-tag{color:var(--ember);font-weight:700}
 
 /* chips + cards */
 .hashtags{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
-.chip{font-family:var(--display);font-size:13px;letter-spacing:.02em;background:var(--navy);color:#fff;padding:6px 13px;border-radius:16px}
-.intent{display:inline-block;font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:11px}
-.intent.informational{background:#e3edff;color:var(--navy)}
-.intent.commercial{background:#ffe0e4;color:var(--red)}
+.chip{font-family:var(--display);font-size:13px;letter-spacing:.04em;background:var(--slab-3);border:1px solid var(--line-blood);color:var(--ash);padding:6px 13px;border-radius:14px}
+.intent{display:inline-block;font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:10px}
+.intent.informational{background:rgba(236,231,239,.07);color:var(--ash);border:1px solid var(--iron)}
+.intent.commercial{background:rgba(212,16,44,.14);color:var(--ember);border:1px solid var(--line-blood)}
 
 /* hub grid */
 .hub-section{margin-bottom:54px}
-.hub-section > h2{font-family:var(--display);font-weight:700;font-size:28px;color:var(--navy);margin-bottom:6px;border-bottom:3px solid var(--red);padding-bottom:8px;display:inline-block}
-.hub-section > p.lede{color:var(--ink-soft);margin:14px 0 24px;max-width:720px}
+.hub-section > h2{font-family:var(--gothic);font-weight:800;font-size:28px;color:var(--bone);margin-bottom:6px;border-bottom:2px solid var(--blood);padding-bottom:8px;display:inline-block;letter-spacing:.02em}
+.hub-section > p.lede{color:var(--ash);margin:14px 0 24px;max-width:720px}
 .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
-.card{display:block;background:#fff;border:1px solid var(--line);border-top:4px solid var(--navy);border-radius:10px;padding:22px;text-decoration:none;color:inherit;transition:.18s;box-shadow:0 2px 8px rgba(10,42,102,.05)}
-.card:hover{transform:translateY(-4px);border-top-color:var(--red);box-shadow:0 8px 22px rgba(10,42,102,.12)}
-.card .kicker{font-family:var(--display);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
-.card h3{font-family:var(--display);font-weight:600;font-size:19px;color:var(--navy);line-height:1.2;margin-bottom:10px}
-.card p{font-size:14px;color:var(--ink-mute);margin-bottom:14px}
-.card .meta{font-family:var(--display);font-size:12px;color:var(--ink-mute);letter-spacing:.03em}
+.card{display:block;background:linear-gradient(180deg,var(--slab-2),var(--slab));border:1px solid var(--line);border-top:3px solid var(--iron);border-radius:8px;padding:22px;text-decoration:none;color:inherit;transition:.18s;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.card:hover{transform:translateY(-4px);border-top-color:var(--blood);box-shadow:0 14px 34px rgba(0,0,0,.7),0 0 22px rgba(212,16,44,.18);text-decoration:none}
+.card .kicker{font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ember);margin-bottom:10px}
+.card h3{font-family:var(--gothic);font-weight:700;font-size:19px;color:var(--bone);line-height:1.22;margin-bottom:10px}
+.card p{font-size:14px;color:var(--ash-mute);margin-bottom:14px}
+.card .meta{font-family:var(--display);font-size:12px;color:var(--ash-mute);letter-spacing:.05em}
 
 /* cta + footer */
-.cta-band{background:linear-gradient(135deg,var(--red) 0%,var(--red-deep) 100%);color:#fff;border-radius:12px;padding:36px;margin-top:48px;text-align:center}
-.cta-band h2{font-family:var(--display);font-weight:700;font-size:28px;margin-bottom:10px}
-.cta-band p{color:#ffe2e6;max-width:560px;margin:0 auto 18px}
-.cta-band .tag{font-family:var(--display);font-weight:600;letter-spacing:.04em}
-footer{background:var(--navy-deep);color:#9fb4e0;text-align:center;padding:30px 28px;font-size:13px;font-family:var(--display);letter-spacing:.03em}
-footer a{color:#cdd9f2}
-.backlink{display:inline-block;font-family:var(--display);font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--red);text-decoration:none;margin-bottom:24px}
+.cta-band{background:linear-gradient(150deg,var(--blood-deep) 0%,#3d0410 55%,var(--pit) 100%);color:var(--bone);border:1px solid var(--line-blood);border-radius:10px;padding:36px;margin-top:48px;text-align:center;box-shadow:0 0 40px rgba(212,16,44,.16) inset}
+.cta-band h2{font-family:var(--gothic);font-weight:800;font-size:28px;margin-bottom:10px;color:#fff}
+.cta-band p{color:var(--ash);max-width:560px;margin:0 auto 18px}
+.cta-band .tag{font-family:var(--display);font-weight:600;letter-spacing:.06em;color:var(--ember)}
+footer{background:var(--pit);color:var(--ash-mute);text-align:center;padding:30px 28px;font-size:13px;font-family:var(--display);letter-spacing:.05em;border-top:1px solid var(--line-blood)}
+footer a{color:var(--ash)}
+.backlink{display:inline-block;font-family:var(--display);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ember);text-decoration:none;margin-bottom:24px}
 .backlink:hover{text-decoration:underline}
+
 /* hero button + pulse */
-.btn-hero{display:inline-block;font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;background:var(--red);color:#fff;text-decoration:none;padding:13px 24px;border-radius:6px;transition:.18s}
-.btn-hero:hover{background:#fff;color:var(--navy)}
-.pulse{width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 0 0 rgba(255,255,255,.7);animation:pulse 2s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,255,255,.6)}70%{box-shadow:0 0 0 9px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+.btn-hero{display:inline-block;font-family:var(--display);font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;background:var(--blood);color:#fff;text-decoration:none;padding:13px 24px;border-radius:4px;transition:.18s;box-shadow:0 0 22px rgba(212,16,44,.35)}
+.btn-hero:hover{background:var(--ember);color:#0a0508;text-decoration:none;box-shadow:0 0 30px rgba(255,58,82,.55)}
+.pulse{width:9px;height:9px;border-radius:50%;background:var(--ember);box-shadow:0 0 0 0 rgba(255,58,82,.7);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,58,82,.6)}70%{box-shadow:0 0 0 9px rgba(255,58,82,0)}100%{box-shadow:0 0 0 0 rgba(255,58,82,0)}}
 
 /* about story */
 .story{max-width:720px}
-.story .lead-para{font-size:22px;line-height:1.6;color:var(--navy);font-weight:500;margin-bottom:30px}
-.story h2{font-family:var(--display);font-weight:700;font-size:25px;color:var(--navy);margin:34px 0 12px;padding-left:14px;border-left:4px solid var(--red)}
-.story p{margin-bottom:16px;color:var(--ink-soft)}
-.signoff{margin-top:40px;padding-top:22px;border-top:2px solid var(--line)}
-.signoff p{font-family:var(--display);font-weight:600;font-size:20px;color:var(--navy);margin:0}
-.signoff .signoff-role{font-family:var(--display);font-weight:400;font-size:13px;letter-spacing:.04em;color:var(--ink-mute);text-transform:uppercase;margin-top:4px}
+.story .lead-para{font-size:22px;line-height:1.6;color:var(--bone);font-weight:500;margin-bottom:30px}
+.story h2{font-family:var(--gothic);font-weight:800;font-size:25px;color:var(--bone);margin:34px 0 12px;padding-left:14px;border-left:3px solid var(--blood)}
+.story p{margin-bottom:16px;color:var(--ash)}
+.signoff{margin-top:40px;padding-top:22px;border-top:1px solid var(--iron)}
+.signoff p{font-family:var(--gothic);font-weight:700;font-size:20px;color:var(--bone);margin:0}
+.signoff .signoff-role{font-family:var(--display);font-weight:400;font-size:13px;letter-spacing:.06em;color:var(--ash-mute);text-transform:uppercase;margin-top:4px}
 
 /* follow / 20 sites */
 .site-list{display:flex;flex-direction:column;gap:14px;margin-bottom:20px}
-.site-row{display:flex;gap:18px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--navy);border-radius:10px;padding:20px 22px;transition:.16s}
-.site-row:hover{border-left-color:var(--red);box-shadow:0 6px 18px rgba(10,42,102,.1)}
-.site-rank{font-family:var(--display);font-weight:700;font-size:26px;color:var(--red);min-width:44px;line-height:1.1}
+.site-row{display:flex;gap:18px;background:linear-gradient(180deg,var(--slab-2),var(--slab));border:1px solid var(--line);border-left:3px solid var(--iron);border-radius:8px;padding:20px 22px;transition:.16s}
+.site-row:hover{border-left-color:var(--blood);box-shadow:0 8px 24px rgba(0,0,0,.6)}
+.site-rank{font-family:var(--gothic);font-weight:800;font-size:26px;color:var(--blood);min-width:44px;line-height:1.1}
 .site-main{flex:1}
-.site-name{font-family:var(--display);font-weight:600;font-size:20px;color:var(--navy);text-decoration:none}
-.site-name:hover{color:var(--red)}
-.site-desc{margin:6px 0 10px;color:var(--ink-soft);font-size:16px}
-.site-tag{display:inline-block;font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:#e3edff;color:var(--navy);padding:3px 11px;border-radius:11px}
+.site-name{font-family:var(--gothic);font-weight:700;font-size:20px;color:var(--bone);text-decoration:none}
+.site-name:hover{color:var(--ember)}
+.site-desc{margin:6px 0 10px;color:var(--ash);font-size:16px}
+.site-tag{display:inline-block;font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;background:rgba(236,231,239,.06);border:1px solid var(--iron);color:var(--ash);padding:3px 11px;border-radius:10px}
 
 /* share box (sharable snippets, no duplicate content) */
-.share-box{margin-top:46px;background:linear-gradient(135deg,#0a2a66 0%,#06184a 100%);border-radius:14px;padding:30px;color:#fff;border-top:6px solid var(--red)}
-.share-box-head h3{font-family:var(--display);font-weight:700;font-size:24px;color:#fff;margin-bottom:8px}
-.share-box-head p{font-size:14px;color:#aebfe2;max-width:620px;margin-bottom:22px}
+.share-box{margin-top:46px;background:linear-gradient(160deg,var(--slab-3) 0%,var(--pit) 100%);border:1px solid var(--line-blood);border-radius:12px;padding:30px;color:var(--bone);border-top:3px solid var(--blood)}
+.share-box-head h3{font-family:var(--gothic);font-weight:800;font-size:24px;color:var(--bone);margin-bottom:8px}
+.share-box-head p{font-size:14px;color:var(--ash-mute);max-width:620px;margin-bottom:22px}
 .snippet-list{display:flex;flex-direction:column;gap:14px}
-.snippet{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:18px}
-.snippet-text{font-size:15px;line-height:1.55;color:#eef3ff;margin-bottom:14px}
+.snippet{background:rgba(236,231,239,.04);border:1px solid var(--line);border-radius:8px;padding:18px}
+.snippet-text{font-size:15px;line-height:1.55;color:var(--bone);margin-bottom:14px}
 .snippet-actions{display:flex;flex-wrap:wrap;gap:8px}
-.snip-btn{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;padding:9px 15px;border-radius:6px;transition:.15s;display:inline-flex;align-items:center;gap:6px}
-.snip-btn.copy{background:#fff;color:var(--navy)}
-.snip-btn.copy:hover{background:var(--red);color:#fff}
-.snip-btn.x{background:#000;color:#fff}
+.snip-btn{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;border:none;cursor:pointer;padding:9px 15px;border-radius:4px;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.snip-btn:hover{text-decoration:none}
+.snip-btn.copy{background:var(--bone);color:var(--void)}
+.snip-btn.copy:hover{background:var(--blood);color:#fff}
+.snip-btn.x{background:#000;color:#fff;border:1px solid var(--iron)}
 .snip-btn.fb{background:#1877f2;color:#fff}
 .snip-btn.li{background:#0a66c2;color:#fff}
-.snip-btn.x:hover,.snip-btn.fb:hover,.snip-btn.li:hover{opacity:.85}
+.snip-btn.x:hover,.snip-btn.fb:hover,.snip-btn.li:hover{opacity:.82}
 
 /* amplify tool */
-.tool{background:#fff;border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:14px;padding:30px 32px;box-shadow:0 4px 18px rgba(10,42,102,.07)}
-.tool-controls{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:26px}
-.field label{display:block;font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:8px}
-.field select{width:100%;font-family:var(--serif);font-size:17px;color:var(--ink);background-color:var(--cream);border:2px solid var(--line);border-radius:9px;padding:13px 42px 13px 14px;cursor:pointer;transition:.15s;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%230a2a66" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>');background-repeat:no-repeat;background-position:right 14px center}
-.field select:focus{outline:none;border-color:var(--navy)}
+.tool{background:linear-gradient(180deg,var(--slab-2),var(--slab));border:1px solid var(--line);border-top:3px solid var(--blood);border-radius:12px;padding:30px 32px;box-shadow:0 14px 40px rgba(0,0,0,.6)}
+.tool-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
+.field label{display:block;font-family:var(--display);font-weight:600;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ash-mute);margin-bottom:8px}
+.field select{width:100%;font-family:var(--serif);font-size:16.5px;color:var(--bone);background-color:var(--pit);border:1px solid var(--iron);border-radius:7px;padding:13px 42px 13px 14px;cursor:pointer;transition:.15s;appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23d4102c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>');background-repeat:no-repeat;background-position:right 14px center}
+.field select:hover{border-color:var(--line-blood)}
+.field select:focus{outline:none;border-color:var(--blood);box-shadow:0 0 0 3px rgba(212,16,44,.18)}
+.field select option{background:var(--pit);color:var(--bone)}
 .out-block{margin-bottom:20px}
 .out-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px}
-.out-head h4{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy)}
-.out-box{width:100%;font-family:var(--serif);font-size:17px;line-height:1.6;color:var(--ink);background:var(--cream);border:2px solid var(--line);border-radius:10px;padding:16px;resize:vertical;min-height:118px;display:block}
-.out-box:focus{outline:none;border-color:var(--navy)}
-.hash-box{min-height:60px;color:var(--navy);font-weight:500}
-.char-count{font-family:var(--display);font-size:12px;letter-spacing:.06em;color:var(--ink-mute);white-space:nowrap}
-.char-count.over{color:var(--red);font-weight:700}
+.out-head h4{font-family:var(--display);font-weight:600;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ash)}
+.out-box{width:100%;font-family:var(--serif);font-size:17px;line-height:1.6;color:var(--bone);background:var(--pit);border:1px solid var(--iron);border-radius:8px;padding:16px;resize:vertical;min-height:118px;display:block}
+.out-box:focus{outline:none;border-color:var(--blood);box-shadow:0 0 0 3px rgba(212,16,44,.18)}
+.hash-box{min-height:60px;color:var(--ember);font-weight:500}
+.char-count{font-family:var(--display);font-size:12px;letter-spacing:.08em;color:var(--ash-mute);white-space:nowrap}
+.char-count.over{color:var(--ember);font-weight:700}
 .tool-actions{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 6px}
-.t-btn{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;border:none;cursor:pointer;padding:12px 18px;border-radius:8px;transition:.15s;display:inline-flex;align-items:center;gap:7px}
-.t-btn.spin{background:var(--red);color:#fff}
-.t-btn.spin:hover{background:var(--red-deep)}
-.t-btn.copy{background:var(--navy);color:#fff}
-.t-btn.copy:hover{background:var(--navy-deep)}
-.t-btn.ghost{background:#fff;color:var(--navy);border:2px solid var(--line)}
-.t-btn.ghost:hover{border-color:var(--navy)}
-.t-btn.copied{background:#2e7d32 !important;color:#fff}
+.t-btn{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.07em;text-transform:uppercase;border:none;cursor:pointer;padding:12px 18px;border-radius:6px;transition:.15s;display:inline-flex;align-items:center;gap:7px}
+.t-btn.spin{background:var(--blood);color:#fff;box-shadow:0 0 20px rgba(212,16,44,.3)}
+.t-btn.spin:hover{background:var(--ember);color:#0a0508}
+.t-btn.copy{background:var(--slab-3);color:var(--bone);border:1px solid var(--iron)}
+.t-btn.copy:hover{border-color:var(--blood);color:#fff}
+.t-btn.ghost{background:transparent;color:var(--ash);border:1px solid var(--iron)}
+.t-btn.ghost:hover{border-color:var(--blood);color:var(--bone)}
+.t-btn.copied{background:var(--ember) !important;color:#0a0508 !important}
 .share-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
-.share-row .lbl{font-family:var(--display);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-mute);margin-right:2px}
-.tool-note{font-size:13px;color:var(--ink-mute);margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+.share-row .lbl{font-family:var(--display);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ash-mute);margin-right:2px}
+.tool-note{font-size:13px;color:var(--ash-mute);margin-top:18px;padding-top:16px;border-top:1px dashed var(--iron)}
+.locale-note{font-family:var(--display);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ash-mute);margin:-14px 0 22px}
+.locale-note b{color:var(--ember);font-weight:600}
+
+@media(max-width:860px){.tool-controls{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}.tool-controls{grid-template-columns:1fr}.tool{padding:22px 18px}}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none}}
 `;
 
 const esc = (s) =>
@@ -313,6 +346,7 @@ function brandBar(current, prefix = '') {
 function page({ title, description, schema, body, current, prefix = '' }) {
   return `<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050308"><meta name="color-scheme" content="dark">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 ${FONTS}
@@ -321,7 +355,7 @@ ${schema ? `<script type="application/ld+json">${JSON.stringify(schema)}</script
 <body>
 ${brandBar(current, prefix)}
 ${body}
-<footer>© ${new Date().getFullYear()} Marketers Against Drunk Driving · Using marketing for good · <span style="color:#c8102e;font-weight:600">${CAMPAIGN}</span><br>Educational content only — not legal advice.</footer>
+<footer>© ${new Date().getFullYear()} Marketers Against Drunk Driving · Using marketing for good · <span style="color:var(--ember);font-weight:600">${CAMPAIGN}</span><br>Educational content only — not legal advice.</footer>
 </body></html>`;
 }
 
@@ -515,12 +549,12 @@ function renderHome() {
 
   <div class="hub-section" id="amplify">
     <h2>Post in 10 Seconds: The Amplify Tool</h2>
-    <p class="lede">Care enough to say something, but never sure what to write? Pick your state and your platform and get a finished, copy-and-paste awareness post with the right hashtags — spun fresh every time so it's never duplicate content.</p>
-    <a class="card" href="amplify.html" style="max-width:460px;border-top-color:var(--red)">
+    <p class="lede">Care enough to say something, but never sure what to write? Pick your country, your state, and your platform and get a finished, copy-and-paste awareness post with the right hashtags — spun fresh every time so it's never duplicate content.</p>
+    <a class="card" href="amplify.html" style="max-width:460px;border-top-color:var(--blood)">
       <div class="kicker">Free Tool</div>
       <h3>Amplify — Ready-to-Post DUI Awareness Copy</h3>
-      <p>Choose a state + platform → copy → paste → post. Native hashtags per network, fresh wording on every spin.</p>
-      <div class="meta">50 states + DC · 5 platforms · No sign-up</div>
+      <p>Choose a country + state + platform → copy → paste → post. Wording follows your country, hashtags follow your network, fresh on every spin.</p>
+      <div class="meta">9 countries · 200+ states &amp; regions · 6 platforms · No sign-up</div>
     </a>
   </div>
 
@@ -653,49 +687,221 @@ const bestSites = [
 
 /* ---------------------------- AMPLIFY (post generator tool) ---------------------------- */
 const AMPLIFY_DATA = {
-  states: [
-    'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware',
-    'District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa',
-    'Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota',
-    'Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey',
-    'New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon',
-    'Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah',
-    'Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming',
-  ],
+  /**
+   * Countries carry their own vocabulary. "Drunk driving" is American; the UK,
+   * Ireland, Australia and New Zealand say "drink driving"; Canada's offence is
+   * "impaired driving". Posting the wrong term reads foreign and kills the
+   * share, so each country brings its own phrasing, subdivision label and
+   * hashtag set.
+   */
+  countries: {
+    us: {
+      name: 'United States',
+      regionLabel: 'State',
+      term: '{drunk driving|impaired driving|driving under the influence}',
+      plain: 'drunk driving',
+      defaultRegion: 'California',
+      hashtags: [
+        '{#DUIAwareness|#StopDUI|#EndDrunkDriving}',
+        '{#BuzzedDrivingIsDrunkDriving|#ThinkBeforeYouDrink|#PreventDrunkDriving}',
+        '{#DesignatedDriver|#ArriveAlive|#PlanAheadForYourRide}',
+      ],
+      regions: [
+        'Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware',
+        'District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa',
+        'Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota',
+        'Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey',
+        'New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon',
+        'Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah',
+        'Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming',
+      ],
+    },
+    ca: {
+      name: 'Canada',
+      regionLabel: 'Province or territory',
+      term: '{impaired driving|drunk driving|driving while impaired}',
+      plain: 'impaired driving',
+      defaultRegion: 'Ontario',
+      hashtags: [
+        '{#ImpairedDriving|#StopImpairedDriving|#EndImpairedDriving}',
+        '{#PlanYourRide|#ArriveAlive|#DesignatedDriver}',
+        '{#RoadSafetyCanada|#SaferRoads|#ThinkBeforeYouDrink}',
+      ],
+      regions: [
+        'Alberta','British Columbia','Manitoba','New Brunswick','Newfoundland and Labrador',
+        'Northwest Territories','Nova Scotia','Nunavut','Ontario','Prince Edward Island',
+        'Quebec','Saskatchewan','Yukon',
+      ],
+    },
+    gb: {
+      name: 'the United Kingdom',
+      regionLabel: 'Nation',
+      term: '{drink driving|drink-driving|driving over the limit}',
+      plain: 'drink driving',
+      defaultRegion: 'England',
+      hashtags: [
+        '{#DrinkDriving|#DontDrinkAndDrive|#StopDrinkDriving}',
+        '{#NoneForTheRoad|#MorningAfter|#ThinkBeforeYouDrink}',
+        '{#RoadSafety|#SaferRoads|#DriveSafe}',
+      ],
+      regions: ['England', 'Northern Ireland', 'Scotland', 'Wales'],
+    },
+    ie: {
+      name: 'Ireland',
+      regionLabel: 'County',
+      term: '{drink driving|drink-driving|driving under the influence}',
+      plain: 'drink driving',
+      defaultRegion: 'Dublin',
+      hashtags: [
+        '{#DrinkDriving|#NeverEverDrinkAndDrive|#DontDrinkAndDrive}',
+        '{#ArriveAlive|#SaferRoads|#RoadSafety}',
+        '{#DesignatedDriver|#PlanTheRide|#ThinkBeforeYouDrink}',
+      ],
+      regions: [
+        'Carlow','Cavan','Clare','Cork','Donegal','Dublin','Galway','Kerry','Kildare','Kilkenny',
+        'Laois','Leitrim','Limerick','Longford','Louth','Mayo','Meath','Monaghan','Offaly',
+        'Roscommon','Sligo','Tipperary','Waterford','Westmeath','Wexford','Wicklow',
+      ],
+    },
+    au: {
+      name: 'Australia',
+      regionLabel: 'State or territory',
+      term: '{drink driving|drink-driving|driving under the influence}',
+      plain: 'drink driving',
+      defaultRegion: 'New South Wales',
+      hashtags: [
+        '{#DrinkDriving|#DontDrinkAndDrive|#StopDrinkDriving}',
+        '{#PlanBSavesLives|#DesignatedDriver|#PlanTheRide}',
+        '{#RoadSafety|#ArriveAlive|#DriveSafe}',
+      ],
+      regions: [
+        'Australian Capital Territory','New South Wales','Northern Territory','Queensland',
+        'South Australia','Tasmania','Victoria','Western Australia',
+      ],
+    },
+    nz: {
+      name: 'New Zealand',
+      regionLabel: 'Region',
+      term: '{drink driving|drink-driving|driving under the influence}',
+      plain: 'drink driving',
+      defaultRegion: 'Auckland',
+      hashtags: [
+        '{#DrinkDriving|#DontDrinkAndDrive|#StopDrinkDriving}',
+        '{#SoberDriver|#DesignatedDriver|#PlanTheRide}',
+        '{#RoadSafety|#DriveSafe|#ArriveAlive}',
+      ],
+      regions: [
+        'Auckland','Bay of Plenty','Canterbury','Gisborne',"Hawke's Bay",'Manawatu-Whanganui',
+        'Marlborough','Nelson','Northland','Otago','Southland','Taranaki','Tasman','Waikato',
+        'Wellington','West Coast',
+      ],
+    },
+    za: {
+      name: 'South Africa',
+      regionLabel: 'Province',
+      term: '{drunk driving|drinking and driving|driving under the influence}',
+      plain: 'drunk driving',
+      defaultRegion: 'Gauteng',
+      hashtags: [
+        '{#DrinkingAndDriving|#DontDrinkAndDrive|#StopDrunkDriving}',
+        '{#ArriveAlive|#RoadSafety|#SaferRoads}',
+        '{#DesignatedDriver|#PlanTheRide|#ThinkBeforeYouDrink}',
+      ],
+      regions: [
+        'Eastern Cape','Free State','Gauteng','KwaZulu-Natal','Limpopo','Mpumalanga',
+        'North West','Northern Cape','Western Cape',
+      ],
+    },
+    in: {
+      name: 'India',
+      regionLabel: 'State or union territory',
+      term: '{drunk driving|drinking and driving|driving under the influence}',
+      plain: 'drunk driving',
+      defaultRegion: 'Maharashtra',
+      hashtags: [
+        '{#DrunkDriving|#DontDrinkAndDrive|#StopDrunkDriving}',
+        '{#RoadSafety|#SaferRoads|#DriveSafe}',
+        '{#DesignatedDriver|#ArriveAlive|#ThinkBeforeYouDrink}',
+      ],
+      regions: [
+        'Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat',
+        'Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh',
+        'Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan',
+        'Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal',
+        'Andaman and Nicobar Islands','Chandigarh','Dadra and Nagar Haveli and Daman and Diu',
+        'Delhi','Jammu and Kashmir','Ladakh','Lakshadweep','Puducherry',
+      ],
+    },
+    global: {
+      name: 'your part of the world',
+      regionLabel: 'Region',
+      term: '{drunk driving|drink driving|impaired driving}',
+      plain: 'drunk driving',
+      defaultRegion: 'Europe',
+      hashtags: [
+        '{#DontDrinkAndDrive|#StopDrunkDriving|#EndDrunkDriving}',
+        '{#RoadSafety|#SaferRoads|#DriveSafe}',
+        '{#DesignatedDriver|#ArriveAlive|#PlanTheRide}',
+      ],
+      regions: [
+        'Africa','Asia','Europe','Latin America','the Caribbean','the Middle East',
+        'North America','Oceania',
+      ],
+    },
+  },
+
   // Per-platform tone: how many hashtags feel native, a soft character budget,
   // and an optional spintax "lead" so posts read the way each network reads.
   platforms: {
-    x:         { name: 'X (Twitter)', hashtags: 2, limit: 280,  lead: '' },
-    instagram: { name: 'Instagram',   hashtags: 5, limit: 2200, lead: '{📢 |🚗💙 |🙌 }' },
-    facebook:  { name: 'Facebook',    hashtags: 2, limit: 2000, lead: '' },
-    tiktok:    { name: 'TikTok',      hashtags: 3, limit: 2200, lead: '{👀 |🚦 |💯 }' },
-    linkedin:  { name: 'LinkedIn',    hashtags: 2, limit: 3000, lead: '' },
+    x: { name: 'X (Twitter)', hashtags: 2, limit: 280, lead: '' },
+    instagram: { name: 'Instagram', hashtags: 5, limit: 2200, lead: '{📢 |🚗🖤 |🕯️ }' },
+    facebook: { name: 'Facebook', hashtags: 2, limit: 2000, lead: '' },
+    tiktok: { name: 'TikTok', hashtags: 3, limit: 2200, lead: '{👀 |🚦 |💯 }' },
+    linkedin: { name: 'LinkedIn', hashtags: 2, limit: 3000, lead: '' },
+    threads: { name: 'Threads', hashtags: 3, limit: 500, lead: '{🖤 |🚗 |}' },
   },
-  // Spintax message templates. {{state}} is swapped for the chosen state before
-  // spinning. Every {a|b|c} group is resolved at random, so no two copies match.
+
+  /**
+   * Templates are spintax. {{region}} takes the chosen state/province/county,
+   * {{country}} the country name, and {{term}} the country's own word for the
+   * offence — so the same template reads native in Ohio, Ontario and Oxford.
+   * Keep {{term}} mid-sentence: it expands lowercase.
+   */
   templates: [
-    "{Every day|Every single day|Right now}, {impaired driving|drunk driving|driving under the influence} {puts {{state}} families at risk|threatens someone on a {{state}} road|changes lives across {{state}}}. {We won't stay quiet.|We refuse to look away.|Not on our watch.} {Plan the ride.|Line up a sober driver.|Hand over the keys.}",
-    "{To everyone driving in {{state}} tonight|{{state}}, this one is for you|If you are heading out in {{state}}}: {buzzed driving is drunk driving|one drink too many can end a life|the safest ride is a sober one}. {Call a ride|Text a friend|Make the responsible call} and {get home safe|protect the people you love|keep your community safe}.",
-    "{Behind every {{state}} DUI headline is a name|Every crash in {{state}} is preventable|These are not just {{state}} statistics — they are people}. {Help us turn awareness into action.|Share this and be the reason someone gets home tonight.|Be the friend who speaks up.}",
-    "{Marketers are creative people|We build campaigns for a living|We know how to make a message travel} — {so we are aiming that reach at {{state}}|so we are pointing it straight at drunk driving in {{state}}|so we are using it to keep {{state}} roads safer}. {Join us.|Share the message.|Add your voice.}",
-    "{A sober driver is a hero|A designated driver is a lifesaver|The best ride home is a sober one}. {{{state}}, tag the friend who always drives|Be that person for your crew in {{state}}|Make the plan before you head out in {{state}}} and {spread the word|help this reach further|keep everyone home}.",
-    "{No text is worth it. No drink is worth it.|One decision protects everyone on the road.|Getting home safe starts before the first drink.} {Wherever you are going in {{state}}|On every {{state}} road|For every family in {{state}}}, {plan ahead and drive sober|choose the sober ride|make the call that gets everyone home}.",
-    "{Someone in {{state}} is counting on you to get home safe|A whole {{state}} community is safer when you plan ahead|Your choice tonight ripples across {{state}}}. {Do not drink and drive.|Line up the ride first.|Keep the keys out of the wrong hands.} {It is that simple.|Every time.|No exceptions.}",
+    "{Every day|Every single day|Right now}, {{term}} {puts {{region}} families at risk|threatens someone on a {{region}} road|changes lives across {{region}}}. {We won't stay quiet.|We refuse to look away.|Not on our watch.} {Plan the ride.|Line up a sober driver.|Hand over the keys.}",
+    '{To everyone driving in {{region}} tonight|{{region}}, this one is for you|If you are heading out in {{region}}}: {one drink too many can end a life|the safest ride is a sober one|no journey is worth a life}. {Call a ride|Text a friend|Make the responsible call} and {get home safe|protect the people you love|keep your community safe}.',
+    '{Behind every {{region}} headline about {{term}} is a name|Every crash in {{region}} is preventable|These are not just {{region}} statistics — they are people}. {Help us turn awareness into action.|Share this and be the reason someone gets home tonight.|Be the friend who speaks up.}',
+    '{Marketers are creative people|We build campaigns for a living|We know how to make a message travel} — {so we are aiming that reach at {{region}}|so we are pointing it straight at {{term}} in {{region}}|so we are using it to keep {{region}} roads safer}. {Join us.|Share the message.|Add your voice.}',
+    '{A sober driver is a hero|A designated driver is a lifesaver|The best ride home is a sober one}. {{{region}}, tag the friend who always drives|Be that person for your crew in {{region}}|Make the plan before you head out in {{region}}} and {spread the word|help this reach further|keep everyone home}.',
+    '{No text is worth it. No drink is worth it.|One decision protects everyone on the road.|Getting home safe starts before the first drink.} {Wherever you are going in {{region}}|On every {{region}} road|For every family in {{region}}}, {plan ahead and drive sober|choose the sober ride|make the call that gets everyone home}.',
+    '{Someone in {{region}} is counting on you to get home safe|A whole {{region}} community is safer when you plan ahead|Your choice tonight ripples across {{region}}}. {Do not drink and drive.|Line up the ride first.|Keep the keys out of the wrong hands.} {It is that simple.|Every time.|No exceptions.}',
+    '{{{region}} is not a statistic to us|We are not posting numbers, we are posting neighbours|Empty seats are the real cost of {{term}}}. {Across {{country}}|Everywhere in {{country}}|From one end of {{country}} to the other}, {the fix is the same|the answer has not changed|it comes down to one decision}: {plan the ride before the first drink|choose a sober driver|never get in the car with someone over the limit}.',
   ],
-  // Hashtag pool (spintax groups). The campaign tag is always appended separately.
-  hashtags: [
-    '{#DontDrinkAndDrive|#DriveSober|#SoberDriving}',
-    '{#RoadSafety|#SafeRoads|#DriveSafe}',
-    '{#DUIAwareness|#StopDUI|#EndDrunkDriving}',
-    '{#DesignatedDriver|#PlanAheadForYourRide|#ArriveAlive}',
-    '{#PreventDrunkDriving|#ThinkBeforeYouDrink|#BuzzedDrivingIsDrunkDriving}',
+
+  // Hashtags every country shares, on top of its local set.
+  sharedHashtags: [
+    '{#DriveSober|#SoberDriving|#DriveSafe}',
+    '{#RoadSafety|#SafeRoads|#EveryoneHomeSafe}',
   ],
-  campaign: '#MarketersAgainstDrunkDriving',
+
+  campaign: CAMPAIGN,
 };
 
 function renderAmplify() {
-  const stateOptions = AMPLIFY_DATA.states
-    .map((s, i) => `<option value="${esc(s)}"${i === 4 ? ' selected' : ''}>${esc(s)}</option>`)
+  const defaultCountry = 'us';
+  const countryOptions = Object.entries(AMPLIFY_DATA.countries)
+    .map(
+      ([k, v]) =>
+        `<option value="${k}"${k === defaultCountry ? ' selected' : ''}>${esc(
+          k === 'global' ? 'Global / Other' : v.name.replace(/^the /, '')
+        )}</option>`
+    )
+    .join('');
+  const c0 = AMPLIFY_DATA.countries[defaultCountry];
+  const regionOptions = c0.regions
+    .map(
+      (r) => `<option value="${esc(r)}"${r === c0.defaultRegion ? ' selected' : ''}>${esc(r)}</option>`
+    )
     .join('');
   const platformOptions = Object.entries(AMPLIFY_DATA.platforms)
     .map(([k, v]) => `<option value="${k}">${esc(v.name)}</option>`)
@@ -709,25 +915,29 @@ function renderAmplify() {
     operatingSystem: 'Any',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     description:
-      'Free tool: pick your state and social platform to generate ready-to-post, copy-and-paste drunk-driving awareness posts with the right hashtags. Every post is spun for fresh, non-duplicate wording.',
+      'Free tool: pick your country, state or region, and social platform to generate ready-to-post, copy-and-paste drunk-driving awareness posts with the right local wording and hashtags. Every post is spun for fresh, non-duplicate wording.',
   };
 
   const body = `
 <header class="hero"><div class="hero-inner">
   <div class="eyebrow"><span class="pulse"></span>FREE TOOL · START POSTING</div>
-  <h1>Amplify — <em>Ready-to-Post</em> DUI Awareness Copy</h1>
-  <div class="subtitle">Pick your state and your platform. Get a finished, copy-and-paste post with the right hashtags — spun fresh every time so nobody's posting duplicate content.</div>
+  <h1>Amplify — <em>Ready-to-Post</em> Awareness Copy</h1>
+  <div class="subtitle">Pick your country, your state, and your platform. Get a finished, copy-and-paste post with the right hashtags — spun fresh every time so nobody's posting duplicate content.</div>
   <p class="hero-tag">Care enough to say something? This does the writing for you. Choose, copy, paste, post. <span style="color:#fff;font-weight:600">${CAMPAIGN}</span></p>
 </div></header>
 <main class="wrap">
   <a class="backlink" href="index.html">← Back home</a>
-  <p class="section-lede">The hardest part of speaking up is finding the words. So we wrote them. Choose your state and the network you post on, and you'll get a native-sounding message plus a hashtag set built for that platform. Hit <em>Spin a fresh version</em> as many times as you like — the wording changes every time, so it never reads as copy-paste spam.</p>
+  <p class="section-lede">The hardest part of speaking up is finding the words. So we wrote them. Choose where you are and the network you post on, and you'll get a native-sounding message plus a hashtag set built for that platform. The wording follows your country too — <em>drunk driving</em> in the States, <em>drink driving</em> in the UK, Ireland, Australia and New Zealand, <em>impaired driving</em> in Canada. Hit <em>Spin a fresh version</em> as many times as you like — the wording changes every time, so it never reads as copy-paste spam.</p>
 
   <div class="tool" id="amplify">
     <div class="tool-controls">
       <div class="field">
-        <label for="stateSel">Your state</label>
-        <select id="stateSel">${stateOptions}</select>
+        <label for="countrySel">Country</label>
+        <select id="countrySel">${countryOptions}</select>
+      </div>
+      <div class="field">
+        <label for="regionSel" id="regionLabel">${esc(c0.regionLabel)}</label>
+        <select id="regionSel">${regionOptions}</select>
       </div>
       <div class="field">
         <label for="platSel">Platform</label>
@@ -759,6 +969,7 @@ function renderAmplify() {
       </div>
     </div>
 
+    <p class="tool-note" id="localeNote"></p>
     <p class="tool-note">Every post is generated in your browser and always carries <strong>${CAMPAIGN}</strong> so the message stays connected to the movement. Wording is educational and awareness-focused — always follow each platform's posting rules. This tool runs fully client-side, so it works anywhere this page is hosted.</p>
   </div>
 
@@ -785,31 +996,56 @@ function renderAmplify() {
     return out.replace(/\\s+/g,' ').trim();
   }
 
+  var countrySel=document.getElementById('countrySel');
+  var regionSel=document.getElementById('regionSel');
+  var regionLabel=document.getElementById('regionLabel');
+  var platSel=document.getElementById('platSel');
+  var postBox=document.getElementById('postBox');
+  var hashBox=document.getElementById('hashBox');
+  var charCount=document.getElementById('charCount');
+  var localeNote=document.getElementById('localeNote');
+
+  function country(){ return DATA.countries[countrySel.value]; }
+
   function pickHashtags(n){
+    // Local tags first so the post reads native, then the shared set.
+    var pool=country().hashtags.concat(DATA.sharedHashtags);
     var seen={}, out=[], guard=0;
     while(out.length<n && guard<n*25){
       guard++;
-      var tag=spin(DATA.hashtags[Math.floor(Math.random()*DATA.hashtags.length)]);
+      var tag=spin(pool[Math.floor(Math.random()*pool.length)]);
       if(!seen[tag.toLowerCase()]){ seen[tag.toLowerCase()]=1; out.push(tag); }
     }
     out.push(DATA.campaign);
     return out;
   }
 
-  var stateSel=document.getElementById('stateSel');
-  var platSel=document.getElementById('platSel');
-  var postBox=document.getElementById('postBox');
-  var hashBox=document.getElementById('hashBox');
-  var charCount=document.getElementById('charCount');
+  // Rebuild the state/province/region list whenever the country changes.
+  function fillRegions(){
+    var c=country();
+    regionLabel.textContent=c.regionLabel;
+    regionSel.innerHTML='';
+    for(var i=0;i<c.regions.length;i++){
+      var o=document.createElement('option');
+      o.value=c.regions[i]; o.textContent=c.regions[i];
+      if(c.regions[i]===c.defaultRegion) o.selected=true;
+      regionSel.appendChild(o);
+    }
+  }
 
   function generate(){
-    var state=stateSel.value;
+    var c=country();
+    var region=regionSel.value||c.defaultRegion;
     var plat=DATA.platforms[platSel.value];
     var tpl=DATA.templates[Math.floor(Math.random()*DATA.templates.length)];
     var lead=spin(plat.lead);
-    var body=(lead?lead+' ':'')+tpl.split('{{state}}').join(state);
+    var body=(lead?lead+' ':'')+tpl
+      .split('{{region}}').join(region)
+      .split('{{country}}').join(c.name)
+      .split('{{term}}').join(c.term);
     postBox.value=spin(body);
     hashBox.value=pickHashtags(plat.hashtags).join(' ');
+    localeNote.innerHTML='Tuned for <strong>'+c.name.replace(/^the /,'')+'</strong> — local wording ("'+c.plain+'") and hashtags people there actually use.';
     updateCount();
     updateShare();
   }
@@ -855,7 +1091,8 @@ function renderAmplify() {
   document.getElementById('copyPost').addEventListener('click',function(){copy(postBox.value,this);});
   document.getElementById('copyHash').addEventListener('click',function(){copy(hashBox.value,this);});
   document.getElementById('copyAll').addEventListener('click',function(){copy(postBox.value+'\\n\\n'+hashBox.value,this);});
-  stateSel.addEventListener('change',generate);
+  countrySel.addEventListener('change',function(){fillRegions();generate();});
+  regionSel.addEventListener('change',generate);
   platSel.addEventListener('change',generate);
   postBox.addEventListener('input',function(){updateCount();updateShare();});
   hashBox.addEventListener('input',function(){updateCount();updateShare();});
@@ -867,13 +1104,14 @@ function renderAmplify() {
   return page({
     title: 'Amplify — Ready-to-Post DUI Awareness Copy | MADD',
     description:
-      'Free tool: pick your state and social platform to get ready-to-post, copy-and-paste drunk-driving awareness posts with the right hashtags. Spun fresh every time — no duplicate content. #MarketersAgainstDrunkDriving',
+      'Free tool: pick your country, state or region, and social platform to get ready-to-post, copy-and-paste drunk-driving awareness posts with the right local wording and hashtags. Spun fresh every time — no duplicate content. #MarketersAgainstDrunkDriving',
     schema,
     body,
     current: 'amplify',
     prefix: '',
   });
 }
+
 
 function renderFollow() {
   const schema = {
@@ -1008,7 +1246,7 @@ ${seoArticles.map((a) => `- [${a.title}](${BASE_URL}/articles/${a.slug}.html): $
 ${guides.map((g) => `- [${g.title}](${BASE_URL}/guides/${g.slug}.html): ${g.metaDescription}`).join('\n')}
 
 ## Tools
-- [Amplify — Ready-to-Post DUI Awareness Copy](${BASE_URL}/amplify.html): Free client-side tool. Pick a state and a social platform to get copy-and-paste drunk-driving awareness posts with platform-appropriate hashtags, spun fresh each time to avoid duplicate content.
+- [Amplify — Ready-to-Post DUI Awareness Copy](${BASE_URL}/amplify.html): Free client-side tool. Pick a country, a state or region, and a social platform to get copy-and-paste drunk-driving awareness posts with country-appropriate wording and platform-appropriate hashtags, spun fresh each time to avoid duplicate content.
 
 ## Resources
 - [The 20 Best Drunk Driving Sites to Follow](${BASE_URL}/best-drunk-driving-sites-to-follow.html): A vetted list of reputable organizations, advocates, and data sources on drunk driving and road safety.
