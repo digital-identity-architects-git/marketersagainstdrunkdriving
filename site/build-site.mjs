@@ -23,6 +23,78 @@ const { seoArticles } = await import(join(root, 'backend/dist/content/seoArticle
 const { guides } = await import(join(root, 'backend/dist/content/guides.js'));
 
 const CAMPAIGN = '#marketersagainstdrunkdriving';
+const BASE_URL = 'https://marketersagainstdrunkdriving.com';
+
+/* ------------------------------------------------------------------ */
+/* Identity graph                                                      */
+/* The site is published by Digital Identity Architects and founded /  */
+/* written by Eric S. Brister. These four nodes are emitted on every   */
+/* page and referenced by @id from the page-specific schema, so search */
+/* engines resolve a single organization and a single author sitewide. */
+/* ------------------------------------------------------------------ */
+const PARENT_ORG_ID = `${BASE_URL}/#digital-identity-architects`;
+const ORG_ID = `${BASE_URL}/#organization`;
+const AUTHOR_ID = `${BASE_URL}/about.html#eric-brister`;
+const SITE_ID = `${BASE_URL}/#website`;
+
+const PARENT_ORG = {
+  '@type': 'Organization',
+  '@id': PARENT_ORG_ID,
+  name: 'Digital Identity Architects',
+  description:
+    'Digital marketing, SEO, and brand-building agency. Publisher of Marketers Against Drunk Driving.',
+  sameAs: [
+    'https://www.facebook.com/digitalidentityarchitects',
+    'https://www.instagram.com/leadsforless/',
+  ],
+};
+
+const AUTHOR = {
+  '@type': 'Person',
+  '@id': AUTHOR_ID,
+  name: 'Eric S. Brister',
+  givenName: 'Eric',
+  familyName: 'Brister',
+  jobTitle: 'SEO & Brand Builder',
+  description:
+    'SEO and brand builder at Digital Identity Architects, and the founder of Marketers Against Drunk Driving.',
+  url: `${BASE_URL}/about.html`,
+  worksFor: { '@id': PARENT_ORG_ID },
+  affiliation: { '@id': PARENT_ORG_ID },
+  knowsAbout: [
+    'Search engine optimization',
+    'Brand strategy',
+    'Public awareness campaigns',
+    'Drunk driving prevention',
+  ],
+  sameAs: ['https://www.linkedin.com/in/eric-brister/'],
+};
+
+const ORG = {
+  '@type': 'Organization',
+  '@id': ORG_ID,
+  name: 'Marketers Against Drunk Driving',
+  url: `${BASE_URL}/`,
+  description:
+    'A public-awareness brand using marketing, SEO, and content to reduce drunk driving. A Digital Identity Architects project.',
+  parentOrganization: { '@id': PARENT_ORG_ID },
+  founder: { '@id': AUTHOR_ID },
+};
+
+const WEB_SITE = {
+  '@type': 'WebSite',
+  '@id': SITE_ID,
+  url: `${BASE_URL}/`,
+  name: 'Marketers Against Drunk Driving',
+  inLanguage: 'en',
+  publisher: { '@id': ORG_ID },
+  copyrightHolder: { '@id': ORG_ID },
+  author: { '@id': AUTHOR_ID },
+};
+
+/* NOTE: site/pledge.html is hand-authored (not generated here) and carries an
+   inline copy of this graph — update it too if these nodes change. */
+const IDENTITY_GRAPH = [PARENT_ORG, ORG, AUTHOR, WEB_SITE];
 const FONTS =
   '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">';
 
@@ -310,33 +382,77 @@ function brandBar(current, prefix = '') {
 </div></div>`;
 }
 
-function page({ title, description, schema, body, current, prefix = '' }) {
+/**
+ * Wraps page-specific schema nodes in the sitewide identity @graph so every
+ * page states the same publisher (Digital Identity Architects), the same
+ * brand (Marketers Against Drunk Driving), and the same author
+ * (Eric S. Brister). `schema` may be one node or an array of nodes.
+ */
+function schemaGraph(schema) {
+  const nodes = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
+  return JSON.stringify({ '@context': 'https://schema.org', '@graph': [...IDENTITY_GRAPH, ...nodes] });
+}
+
+/**
+ * A WebPage node for one page, wired to the sitewide site / publisher /
+ * author nodes. `path` is relative to BASE_URL ('' for the home page).
+ */
+function webPageNode({ path, name, description, type = 'WebPage', extra = {} }) {
+  const url = `${BASE_URL}/${path}`;
+  return {
+    '@type': type,
+    '@id': `${url}#webpage`,
+    url,
+    name,
+    description,
+    inLanguage: 'en',
+    isPartOf: { '@id': SITE_ID },
+    publisher: { '@id': ORG_ID },
+    author: { '@id': AUTHOR_ID },
+    ...extra,
+  };
+}
+
+function page({ title, description, schema, body, current, prefix = '', path = '' }) {
   return `<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
+<link rel="canonical" href="${BASE_URL}/${path}">
+<meta name="author" content="Eric S. Brister">
+<meta name="publisher" content="Digital Identity Architects">
 ${FONTS}
-${schema ? `<script type="application/ld+json">${JSON.stringify(schema)}</script>` : ''}
+<script type="application/ld+json">${schemaGraph(schema)}</script>
 <style>${CSS}</style></head>
 <body>
 ${brandBar(current, prefix)}
 ${body}
-<footer>© ${new Date().getFullYear()} Marketers Against Drunk Driving · Using marketing for good · <span style="color:#c8102e;font-weight:600">${CAMPAIGN}</span><br>Educational content only — not legal advice.</footer>
+<footer>© ${new Date().getFullYear()} Marketers Against Drunk Driving · Using marketing for good · <span style="color:#c8102e;font-weight:600">${CAMPAIGN}</span><br>A <a href="https://www.facebook.com/digitalidentityarchitects" target="_blank" rel="noopener">Digital Identity Architects</a> project · Founded and written by <a href="${prefix}about.html" rel="author">Eric S. Brister</a><br>Educational content only — not legal advice.</footer>
 </body></html>`;
 }
 
 /* ---------------------------- GUIDE (course) ---------------------------- */
 function renderGuide(g) {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Course',
-    name: g.title,
-    description: g.metaDescription,
-    inLanguage: 'en',
-    provider: { '@type': 'Organization', name: 'Marketers Against Drunk Driving' },
-    hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online' },
-    about: g.targetKeyword,
-  };
+  const path = `guides/${g.slug}.html`;
+  const url = `${BASE_URL}/${path}`;
+  const schema = [
+    {
+      '@type': 'Course',
+      '@id': `${url}#course`,
+      url,
+      name: g.title,
+      description: g.metaDescription,
+      inLanguage: 'en',
+      provider: { '@id': ORG_ID },
+      publisher: { '@id': ORG_ID },
+      author: { '@id': AUTHOR_ID },
+      hasCourseInstance: { '@type': 'CourseInstance', courseMode: 'online' },
+      about: g.targetKeyword,
+      isPartOf: { '@id': SITE_ID },
+      mainEntityOfPage: { '@id': `${url}#webpage` },
+    },
+    webPageNode({ path, name: g.title, description: g.metaDescription }),
+  ];
 
   const lessons = g.steps
     .map((s, i) => {
@@ -432,22 +548,33 @@ function renderGuide(g) {
     body,
     current: 'guides',
     prefix: '../',
+    path,
   });
 }
 
 /* ---------------------------- ARTICLE ---------------------------- */
 function renderArticle(a) {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: a.title,
-    description: a.metaDescription,
-    keywords: a.targetKeyword,
-    datePublished: a.datePublished,
-    inLanguage: 'en',
-    author: { '@type': 'Organization', name: 'Marketers Against Drunk Driving' },
-    publisher: { '@type': 'Organization', name: 'Marketers Against Drunk Driving' },
-  };
+  const path = `articles/${a.slug}.html`;
+  const url = `${BASE_URL}/${path}`;
+  const schema = [
+    {
+      '@type': 'Article',
+      '@id': `${url}#article`,
+      url,
+      headline: a.title,
+      description: a.metaDescription,
+      keywords: a.targetKeyword,
+      datePublished: a.datePublished,
+      inLanguage: 'en',
+      author: { '@id': AUTHOR_ID },
+      creator: { '@id': AUTHOR_ID },
+      publisher: { '@id': ORG_ID },
+      copyrightHolder: { '@id': ORG_ID },
+      isPartOf: { '@id': SITE_ID },
+      mainEntityOfPage: { '@id': `${url}#webpage` },
+    },
+    webPageNode({ path, name: a.title, description: a.metaDescription }),
+  ];
   const chips = a.hashtags.map((h) => `<span class="chip">${esc(h)}</span>`).join('');
   const body = `
 <header class="hero"><div class="hero-inner">
@@ -465,7 +592,15 @@ function renderArticle(a) {
   <div class="hashtags">${chips}</div>
   ${shareBox(a.title, a.targetKeyword, 'article')}
 </main>`;
-  return page({ title: a.metaTitle, description: a.metaDescription, schema, body, current: 'articles', prefix: '../' });
+  return page({
+    title: a.metaTitle,
+    description: a.metaDescription,
+    schema,
+    body,
+    current: 'articles',
+    prefix: '../',
+    path,
+  });
 }
 
 /* ---------------------------- HOME ---------------------------- */
@@ -554,26 +689,40 @@ function renderHome() {
   </div>
 </main>`;
 
+  const schema = webPageNode({
+    path: '',
+    type: 'CollectionPage',
+    name: 'Marketers Against Drunk Driving — Using Marketing for Good',
+    description:
+      'Marketers Against Drunk Driving: helpful guides, articles, and resources on drunk driving law, prevention, and getting home safe. A Digital Identity Architects project founded by Eric S. Brister.',
+    extra: { about: { '@id': ORG_ID }, mainEntity: { '@id': ORG_ID } },
+  });
+
   return page({
     title: 'Marketers Against Drunk Driving — Using Marketing for Good',
     description:
       'Marketers Against Drunk Driving: helpful guides, articles, and resources on drunk driving law, prevention, and getting home safe. Built by an SEO turning reach into responsibility. #marketersagainstdrunkdriving',
+    schema,
     body,
     current: 'home',
     prefix: '',
+    path: '',
   });
 }
 
 /* ---------------------------- ABOUT ---------------------------- */
 function renderAbout() {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'AboutPage',
+  const schema = webPageNode({
+    path: 'about.html',
+    type: 'AboutPage',
     name: 'About Marketers Against Drunk Driving',
     description:
       'The story behind Marketers Against Drunk Driving — how a trip to pay a ticket turned into a recruit, and why an SEO decided brand-building was a form of social responsibility.',
-    inLanguage: 'en',
-  };
+    extra: {
+      about: [{ '@id': ORG_ID }, { '@id': PARENT_ORG_ID }],
+      mainEntity: { '@id': AUTHOR_ID },
+    },
+  });
 
   const body = `
 <header class="hero"><div class="hero-inner">
@@ -603,8 +752,9 @@ function renderAbout() {
     <p>I think anyone with the ability to move people owes it to the world to occasionally move them somewhere good. I can build brands that get in front of all the right people. So this one is mine to build — and it's the one I'm proudest of. If it gets even one person to hand over the keys, the whole thing was worth it.</p>
 
     <div class="signoff">
-      <p>— Eric Brister</p>
-      <p class="signoff-role">SEO &amp; Brand Builder · Founder, Marketers Against Drunk Driving</p>
+      <p>— Eric S. Brister</p>
+      <p class="signoff-role">SEO &amp; Brand Builder at <a href="https://www.facebook.com/digitalidentityarchitects" target="_blank" rel="noopener">Digital Identity Architects</a> · Founder, Marketers Against Drunk Driving</p>
+      <p class="signoff-role"><a href="https://www.linkedin.com/in/eric-brister/" target="_blank" rel="noopener me">LinkedIn</a> · <a href="https://www.instagram.com/leadsforless/" target="_blank" rel="noopener me">Instagram</a> · <a href="https://www.facebook.com/digitalidentityarchitects" target="_blank" rel="noopener me">Facebook</a></p>
     </div>
   </div>
 
@@ -624,6 +774,7 @@ function renderAbout() {
     body,
     current: 'about',
     prefix: '',
+    path: 'about.html',
   });
 }
 
@@ -701,16 +852,30 @@ function renderAmplify() {
     .map(([k, v]) => `<option value="${k}">${esc(v.name)}</option>`)
     .join('');
 
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: 'MADD Amplify — DUI Awareness Post Generator',
-    applicationCategory: 'UtilitiesApplication',
-    operatingSystem: 'Any',
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-    description:
-      'Free tool: pick your state and social platform to generate ready-to-post, copy-and-paste drunk-driving awareness posts with the right hashtags. Every post is spun for fresh, non-duplicate wording.',
-  };
+  const amplifyDescription =
+    'Free tool: pick your state and social platform to generate ready-to-post, copy-and-paste drunk-driving awareness posts with the right hashtags. Every post is spun for fresh, non-duplicate wording.';
+  const schema = [
+    {
+      '@type': 'WebApplication',
+      '@id': `${BASE_URL}/amplify.html#webapp`,
+      url: `${BASE_URL}/amplify.html`,
+      name: 'MADD Amplify — DUI Awareness Post Generator',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'Any',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      description: amplifyDescription,
+      author: { '@id': AUTHOR_ID },
+      creator: { '@id': AUTHOR_ID },
+      publisher: { '@id': ORG_ID },
+      isPartOf: { '@id': SITE_ID },
+      mainEntityOfPage: { '@id': `${BASE_URL}/amplify.html#webpage` },
+    },
+    webPageNode({
+      path: 'amplify.html',
+      name: 'Amplify — Ready-to-Post DUI Awareness Copy',
+      description: amplifyDescription,
+    }),
+  ];
 
   const body = `
 <header class="hero"><div class="hero-inner">
@@ -872,22 +1037,36 @@ function renderAmplify() {
     body,
     current: 'amplify',
     prefix: '',
+    path: 'amplify.html',
   });
 }
 
 function renderFollow() {
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: 'The 20 Best Drunk Driving Sites to Follow',
-    numberOfItems: bestSites.length,
-    itemListElement: bestSites.map(([name, url], i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      url,
-      name,
-    })),
-  };
+  const followDescription =
+    'A vetted list of reputable organizations, advocates, and data sources on drunk driving and road safety.';
+  const schema = [
+    {
+      '@type': 'ItemList',
+      '@id': `${BASE_URL}/best-drunk-driving-sites-to-follow.html#itemlist`,
+      name: 'The 20 Best Drunk Driving Sites to Follow',
+      description: followDescription,
+      numberOfItems: bestSites.length,
+      itemListElement: bestSites.map(([name, url], i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url,
+        name,
+      })),
+      isPartOf: { '@id': SITE_ID },
+      mainEntityOfPage: { '@id': `${BASE_URL}/best-drunk-driving-sites-to-follow.html#webpage` },
+    },
+    webPageNode({
+      path: 'best-drunk-driving-sites-to-follow.html',
+      type: 'CollectionPage',
+      name: 'The 20 Best Drunk Driving Sites to Follow',
+      description: followDescription,
+    }),
+  ];
 
   const rows = bestSites
     .map(
@@ -934,6 +1113,7 @@ function renderFollow() {
     body,
     current: 'follow',
     prefix: '',
+    path: 'best-drunk-driving-sites-to-follow.html',
   });
 }
 
@@ -953,7 +1133,6 @@ writeFileSync(join(__dirname, 'amplify.html'), renderAmplify());
 writeFileSync(join(__dirname, 'best-drunk-driving-sites-to-follow.html'), renderFollow());
 
 /* ---------------------------- SITEMAP + ROBOTS ---------------------------- */
-const BASE_URL = 'https://marketersagainstdrunkdriving.com';
 const today = new Date().toISOString().slice(0, 10);
 
 const urls = [
@@ -996,10 +1175,12 @@ writeFileSync(join(__dirname, 'robots.txt'), robots);
 /* llms.txt — helps AI assistants understand and cite the site (llmstxt.org) */
 const llms = `# Marketers Against Drunk Driving
 
-> Using marketing for good. Helpful, plain-English guides, articles, and resources on drunk driving law (DUI/DWI), felony thresholds, choosing an attorney, prevention, and getting home safe. Built by an SEO who turned brand-building into social responsibility. Educational content only — not legal advice. Campaign hashtag: #marketersagainstdrunkdriving
+> Using marketing for good. Helpful, plain-English guides, articles, and resources on drunk driving law (DUI/DWI), felony thresholds, choosing an attorney, prevention, and getting home safe. Built by an SEO who turned brand-building into social responsibility. Published by Digital Identity Architects; written by founder Eric S. Brister. Educational content only — not legal advice. Campaign hashtag: #marketersagainstdrunkdriving
 
 ## About
 - [About — our story](${BASE_URL}/about.html): How paying a ticket turned a marketer into a recruit, and why building this brand is social responsibility.
+- Publisher: Digital Identity Architects — https://www.facebook.com/digitalidentityarchitects · https://www.instagram.com/leadsforless/
+- Author: Eric S. Brister, SEO & Brand Builder at Digital Identity Architects and founder of Marketers Against Drunk Driving — https://www.linkedin.com/in/eric-brister/
 
 ## Articles
 ${seoArticles.map((a) => `- [${a.title}](${BASE_URL}/articles/${a.slug}.html): ${a.metaDescription}`).join('\n')}
