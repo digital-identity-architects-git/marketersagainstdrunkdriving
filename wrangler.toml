@@ -1,0 +1,13 @@
+# Cloudflare Pages configuration.
+#
+# The site is a static build (output in ./site) plus Pages Functions in
+# ./functions (the /api/radar endpoint). Pages Functions require a
+# compatibility date; without one, builds fail once a functions/ directory
+# is present — which is the most likely cause of the failing deploys.
+#
+# `name` must match the Cloudflare Pages project this repo is connected to.
+# This repo currently has two connected projects (…/… and …1); set this to
+# whichever is authoritative. Defaulting to the un-suffixed original.
+name = "marketersagainstdrunkdriving"
+pages_build_output_dir = "site"
+compatibility_date = "2024-11-06"

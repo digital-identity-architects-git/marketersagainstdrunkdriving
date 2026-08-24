@@ -31,6 +31,46 @@ That's it. Cloudflare clones the repo, runs the generator, and publishes the
 Every time a change lands on `main`, Cloudflare rebuilds and redeploys on its
 own. No uploads, no FTP. Add 500 articles and the workflow is identical.
 
+## Live DUI Radar — one extra setting (the "Share to Care" tool)
+
+The home page has a **Live DUI Radar**: pick a state + platform, and it pulls the
+latest real drunk-driving news for that state and uses AI to write a factual,
+de-identified, ready-to-post message with the right hashtags. This is powered by
+a **Cloudflare Pages Function** at `functions/api/radar.js` (served at
+`/api/radar`). Cloudflare auto-detects the `functions/` folder — no build config
+needed — but the AI step needs one secret:
+
+1. In the Pages project → **Settings** → **Environment variables** → **Add**:
+
+   | Variable | Value |
+   |----------|-------|
+   | `OPENAI_API_KEY` | your OpenAI API key (`sk-...`) |
+   | `OPENAI_MODEL` *(optional)* | e.g. `gpt-4o-mini` (default) or `gpt-4.1-mini` |
+
+2. Add it for **Production** (and Preview if you want previews to work), then
+   redeploy (Deployments → ⋯ → Retry deployment).
+
+The key lives only on Cloudflare's servers — it is never sent to the browser.
+
+**News sources are free and need no keys:** the function queries Google News and
+GDELT and merges the results, so every state stays covered. Cost is only the
+OpenAI call per generated post (fractions of a cent on `gpt-4o-mini`).
+
+**Test after deploy:**
+
+```bash
+curl -s https://YOUR-SITE.pages.dev/api/radar \
+  -H 'Content-Type: application/json' \
+  -d '{"state":"Texas","platform":"x"}'
+```
+
+You should get JSON with `post`, `hashtags`, and the `headline` it was based on.
+
+> Prefer to run it through n8n instead? A ready-built workflow
+> ("MADD — DUI Radar (Live Webhook)") already exists in your n8n. Once your n8n
+> plan is active, publish it and change `RADAR_API` in the home-page script
+> (`renderRadarSection` in `site/build-site.mjs`) to its webhook URL.
+
 ## Connecting your custom domain
 
 1. In the Pages project → **Custom domains** → **Set up a domain**.
