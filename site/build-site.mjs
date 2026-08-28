@@ -1223,9 +1223,17 @@ emit('industries.html', renderIndustriesIndex({ page, prefix: '' }));
   const pledgePath = join(__dirname, 'pledge.html');
   let pledge = readFileSync(pledgePath, 'utf8');
   const navRe = /  <nav class="brand-nav">[\s\S]*?<\/nav>/;
+  const A = '/* nav-css:start */';
+  const B = '/* nav-css:end */';
   if (navRe.test(pledge)) {
     pledge = pledge.replace(navRe, '  ' + renderNav('mission', ''));
-    pledge = pledge.replace('</style>', SERVICES_CSS + '\n</style>');
+    // Strip every previously injected copy — marked or not — so repeated
+    // builds replace the block instead of stacking another copy onto it.
+    // Matches a marked block, or a legacy unmarked one from an older build
+    // whose text no longer matches SERVICES_CSS verbatim.
+    const injected = /\n?\/\* nav-css:start \*\/[\s\S]*?\/\* nav-css:end \*\/\n?|\n?\.brand-nav\{position:relative\}[\s\S]*?\.nav-panel-in\{flex-direction:column;gap:12px;box-shadow:none\}\n\}\n?/g;
+    pledge = pledge.replace(injected, '\n');
+    pledge = pledge.replace('</style>', `${A}${SERVICES_CSS}\n${B}\n</style>`);
     writeFileSync(pledgePath, pledge);
     console.log('✓ Synced pledge.html nav');
   } else {
