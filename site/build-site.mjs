@@ -12,7 +12,7 @@
  *
  * Run: node site/build-site.mjs   (after `npm --prefix backend run build`)
  */
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -21,6 +21,14 @@ const root = join(__dirname, '..');
 
 const { seoArticles } = await import(join(root, 'backend/dist/content/seoArticles.js'));
 const { guides } = await import(join(root, 'backend/dist/content/guides.js'));
+
+const SVC = await import('./render-services.mjs');
+const {
+  INDUSTRIES, SERVICES: SVC_LIST, CATEGORIES: SVC_CATS, servicesFor,
+  renderNav, SERVICES_CSS, renderServicePage, renderIndustryHub, renderServiceHub,
+  renderCategoryHub, renderServicesIndex, renderIndustriesIndex,
+  servicePath, industryPath, serviceHubPath, categoryPath,
+} = SVC;
 
 const CAMPAIGN = '#marketersagainstdrunkdriving';
 const FONTS =
@@ -252,6 +260,8 @@ footer a{color:var(--ash)}
 @media(max-width:860px){.tool-controls{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.wrap{padding:36px 18px}.lesson{padding:22px 20px}.story .lead-para{font-size:19px}.site-rank{font-size:20px;min-width:32px}.share-box{padding:22px}.tool-controls{grid-template-columns:1fr}.tool{padding:22px 18px}}
 @media (prefers-reduced-motion:reduce){.pulse{animation:none}}
+
+${SERVICES_CSS}
 `;
 
 const esc = (s) =>
@@ -331,15 +341,7 @@ function brandBar(current, prefix = '') {
     <span class="shield"><span>MADD</span></span>
     <span><span class="brand-name">MADD</span><br><span class="brand-sub">Marketers Against Drunk Driving</span></span>
   </a>
-  <nav class="brand-nav">
-    ${link('index.html', 'Home', 'home')}
-    ${link('pledge.html', 'Pledge', 'pledge')}
-    ${link('about.html', 'About', 'about')}
-    ${link('amplify.html', 'Amplify', 'amplify')}
-    ${link('index.html#guides', 'Guides', 'guides')}
-    ${link('index.html#articles', 'Articles', 'articles')}
-    ${link('best-drunk-driving-sites-to-follow.html', 'Follow', 'follow')}
-  </nav>
+  ${renderNav(current, prefix)}
 </div></div>`;
 }
 
@@ -351,7 +353,7 @@ function page({ title, description, schema, body, current, prefix = '' }) {
 <meta name="description" content="${esc(description)}">
 ${FONTS}
 ${schema ? `<script type="application/ld+json">${JSON.stringify(schema)}</script>` : ''}
-<style>${CSS}</style></head>
+<link rel="stylesheet" href="${prefix}assets/site.css"></head>
 <body>
 ${brandBar(current, prefix)}
 ${body}
@@ -1176,6 +1178,8 @@ function renderFollow() {
 }
 
 /* ---------------------------- WRITE ---------------------------- */
+mkdirSync(join(__dirname, 'assets'), { recursive: true });
+writeFileSync(join(__dirname, 'assets', 'site.css'), CSS);
 mkdirSync(join(__dirname, 'guides'), { recursive: true });
 mkdirSync(join(__dirname, 'articles'), { recursive: true });
 
@@ -1189,6 +1193,46 @@ writeFileSync(join(__dirname, 'index.html'), renderHome());
 writeFileSync(join(__dirname, 'about.html'), renderAbout());
 writeFileSync(join(__dirname, 'amplify.html'), renderAmplify());
 writeFileSync(join(__dirname, 'best-drunk-driving-sites-to-follow.html'), renderFollow());
+
+/* ------------------- service x industry matrix ------------------- */
+mkdirSync(join(__dirname, 'services'), { recursive: true });
+mkdirSync(join(__dirname, 'industries'), { recursive: true });
+
+const svcCtx = { page, prefix: '../' };
+const svcUrls = [];
+const emit = (rel, html) => {
+  writeFileSync(join(__dirname, rel), html);
+  svcUrls.push(rel);
+};
+
+for (const industry of INDUSTRIES) {
+  for (const service of servicesFor(industry)) {
+    emit(servicePath(service, industry), renderServicePage(service, industry, svcCtx));
+  }
+  emit(industryPath(industry), renderIndustryHub(industry, svcCtx));
+}
+for (const service of SVC_LIST) emit(serviceHubPath(service), renderServiceHub(service, svcCtx));
+for (const cat of SVC_CATS) emit(categoryPath(cat), renderCategoryHub(cat, svcCtx));
+
+emit('services.html', renderServicesIndex({ page, prefix: '' }));
+emit('industries.html', renderIndustriesIndex({ page, prefix: '' }));
+
+/* pledge.html is hand-authored and not generated, so its nav is rewritten in
+   place on every build to keep the menu identical across the whole site. */
+{
+  const pledgePath = join(__dirname, 'pledge.html');
+  let pledge = readFileSync(pledgePath, 'utf8');
+  const navRe = /  <nav class="brand-nav">[\s\S]*?<\/nav>/;
+  if (navRe.test(pledge)) {
+    pledge = pledge.replace(navRe, '  ' + renderNav('mission', ''));
+    pledge = pledge.replace('</style>', SERVICES_CSS + '\n</style>');
+    writeFileSync(pledgePath, pledge);
+    console.log('✓ Synced pledge.html nav');
+  } else {
+    console.warn('! pledge.html nav not found — menu may be out of sync');
+  }
+}
+
 
 /* ---------------------------- SITEMAP + ROBOTS ---------------------------- */
 const BASE_URL = 'https://marketersagainstdrunkdriving.com';
@@ -1205,6 +1249,11 @@ const urls = [
     loc: `articles/${a.slug}.html`,
     priority: '0.9',
     lastmod: a.datePublished || today,
+  })),
+  ...svcUrls.map((loc) => ({
+    loc,
+    priority: loc.includes('-for-') ? '0.6' : '0.7',
+    lastmod: today,
   })),
 ];
 
@@ -1253,8 +1302,12 @@ ${guides.map((g) => `- [${g.title}](${BASE_URL}/guides/${g.slug}.html): ${g.meta
 `;
 writeFileSync(join(__dirname, 'llms.txt'), llms);
 
-const total = guides.length + seoArticles.length + 4;
+const total = guides.length + seoArticles.length + 4 + svcUrls.length;
 console.log(
-  `✓ Built site: home + about + amplify + follow + ${guides.length} guides + ${seoArticles.length} articles = ${total} pages`
+  `✓ Built site: home + about + amplify + follow + ${guides.length} guides + ${seoArticles.length} articles`
 );
+console.log(
+  `✓ Built matrix: ${svcUrls.length} pages — ${INDUSTRIES.length} industries × ${SVC_LIST.length} services across ${SVC_CATS.length} categories`
+);
+console.log(`✓ ${total} pages total`);
 console.log(`✓ Wrote sitemap.xml (${urls.length} URLs) + robots.txt + llms.txt`);
